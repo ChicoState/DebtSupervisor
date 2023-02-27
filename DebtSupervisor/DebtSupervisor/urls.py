@@ -18,6 +18,9 @@ from django.urls import path
 from app1 import views as app1_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',app1_views.home)
+    path('admin/', admin.site.urls), 
+    path('',app1_views.home),
+    path('join/', app1_views.join),
+    path('login/', app1_views.user_login),
+    path('logout/', app1_views.user_logout),
 ]

@@ -1,0 +1,93 @@
+<html>
+    <head>
+        {% include "bootstrap.html" %}
+        {% load static %}
+        <script src = "{%static 'deleteTransaction.js' %}"></script>
+
+    </head>
+    <body>
+        {%include "navigation.html"%}
+        
+        <div class="col-md-12">
+                <h1 class="display-4">Transactions</h1>
+            <hr class="my-4">
+
+        </div>
+            <div class="col-md-12">
+                {%if not table_data%}
+                    <p class="text-monospace">There are no transactions to display.</p>
+                {%else%}
+            </div>
+                <div class="col-md-12">
+                    <table class="table table-hover shadow p-3 mb-5 bg-white rounded">
+                        <thead class="thead-light">
+                        <tr>
+                            <th class="font-weight-light" scope="col">Transaction Date</th>
+                            <th class="font-weight-light" scope="col">Description</th>
+                            <th class="font-weight-light" scope="col">Amount</th>
+                            <th class="font-weight-light" scope="col">Category</th>
+                            
+                        </tr>
+                         </thead>
+                         <tbody class="thead-dark">
+                        
+                        
+                    {%for row in table_data%}
+                    
+                        <tr >
+                            <td>
+                                {{row.transactionDate}}
+                            </td>
+                            <td>
+                                {{row.description}}
+                                
+                            </td>
+                            <td>
+                              ${{row.transactionAmount}}
+                            </td>
+                        </td>
+                        <td>
+                          {{row.category}}
+                        </td>
+                            <td>
+                                <a class="btn btn-info" href="/transaction/edit/{{ row.id }}">Edit</a>
+                                <a class="btn btn-info" href="#" onclick="confirmDeleteModal({{ row.id }})">Delete</a> 
+                            </td>    
+                        </tr>  
+                    
+                        {%endfor%} 
+                    
+                    </table>
+                
+                    {%endif%}
+                   
+                    <form method="GET" action="/transaction/addtransaction">
+                        <input type="submit" class="btn btn-info" value = "Add Transaction Entry">
+                    </form>
+            
+                </div>
+            </tbody>
+        
+    
+    <!-- Modal -->
+    <div id="deleteModal" class="modal fade" role='dialog'>
+        <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header">
+            <h4 class="modal-title" id="exampleModalLabel">Delete Transaction</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Do you really want to delete this Transaction Entry?</p> 
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <span id= 'deleteButton'></span>
+        </div>
+        </div>
+     </div>
+    </div>
+        <!--Modal ends here--> 
+    </body>
+</html>
+

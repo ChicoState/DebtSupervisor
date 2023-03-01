@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <html>
+    <head>
+      {% load static %}
+      <title>Can I Afford It?</title>
+      <!--bootstrap includes-->
+      {% include "bootstrap.html" %}
+      <!--end bootstrap includes-->
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" type="text/css" href="Afford.css" />
+    </head>
+    <body>
+     <h1> Debt Supervisor </h1>
+      {% include "navigation.html" %}
+      <h2>Can I Afford It?</h2>
+      <nav>
+        <ul>
+          <lis><a href="/">Home</a></li><br>
+
+            <p1> Check if you can afford a purchase by using the calculator. </p>
+      <form method="POST" action="{% url 'calculate_affordability' %}">
+        {% csrf_token %}
+        <label for="monthly_income">Monthly Income:</label>
+        <input type="number" name="monthly_income" required />
+        <br />
+        <label for="monthly_expenses">Monthly Expenses:</label>
+        <input type="number" name="monthly_expenses" required />
+        <br />
+        <label for="cost_of_purchase">Cost of Purchase:</label>
+        <input type="number" name="cost_of_purchase" required />
+        <br />
+        <button type="submit">Calculate</button>
+      </form>
+    </body>
+  </html>
+</html>

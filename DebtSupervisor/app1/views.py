@@ -65,3 +65,37 @@ def user_logout(request):
     logout(request)
     # Return to homepage. 
     return redirect("/")
+
+def afford (request):
+    return render (request, 'app1/Afford.html')
+
+def result(request):
+    return render (request, 'app1/result.html')
+
+
+def calculate_affordability(request):
+    if request.method == 'POST':
+        # Get the form data from the request
+        monthly_income = float(request.POST.get('monthly_income'))
+        monthly_expenses = float(request.POST.get('monthly_expenses'))
+        cost_of_purchase = float(request.POST.get('cost_of_purchase'))
+
+        # Calculate affordability
+        affordability = monthly_income - monthly_expenses - cost_of_purchase
+        
+        # Calculate dispoable_income
+        disposable_income = monthly_income -  monthly_expenses
+
+
+        # Create a dictionary of data to pass to the template
+        context = {
+            'monthly_income': monthly_income,
+            'monthly_expenses': monthly_expenses,
+            'cost_of_purchase': cost_of_purchase,
+            'affordability': affordability,
+            'disposable_income': disposable_income,
+            'can_afford': affordability >= 0
+        }
+
+        # Render the template with the data
+        return render(request, 'app1/result.html', context)

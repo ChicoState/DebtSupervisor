@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Can I Afford It?</title>
+  </head>
+  <body>
+    <h1>Can I Afford It?</h1>
+    {% if can_afford %}
+    <p>You can afford the purchase!</p>
+    {% else %}
+    <p>Sorry, you cannot afford the purchase.</p>
+    {% endif %}
+    <p>Your monthly disposable income is ${{ disposable_income }}.</p>
+    <p>The cost of the purchase is ${{ cost_of_purchase }}.</p>
+    <a href="/afford">Try again</a><br>
+    <a href="/">Home</a></li>
+  </body>
+</html>

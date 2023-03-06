@@ -3,13 +3,52 @@
 <head>
   {% load static %}
   <meta charset="utf-8">
-  <title>Debt Supervbisor Project</title>
+  <title>Debt Supervisor Project</title>
   <!--bootstrap includes-->
   {% include "bootstrap.html" %}
-
+  {% load humanize %}
 </head>
   <body>
     {% include "navigation.html" %}
-    <h1>DebtSupervisor Home Page</h1>
+  
+    {%if table_data%}
+      <h1>Welcome!</h1>
+      <br>
+      <div class ="row">
+        <div class ="col">
+          <h3 >Total Balance:</h3>
+          <hr>
+          <p class="h4">${{total_balance|floatformat:2|intcomma}}</p>
+        </div>
+      </div>
+      <br>
+
+      <h3> My Debts</h3> <hr>
+      <div class= "row">
+        {%for items in table_data%}
+        
+          <div class= "col-sm-6">
+            <div class="card" >
+              <div class="card-body">
+                <h5 class="card-title">{{items.Name}}</h5>
+                <p class="card-text">Current Balance: ${{items.currBalance|floatformat:2|intcomma}}</p>
+                <p class="card-text">Total Available: ${{items.TotalBalance|floatformat:2|intcomma}}</p>
+                <p class="card-text">Rate: {{items.AprRate|floatformat:2}}%</p>
+                <p>Usage:</p>
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" style="width: {{items.getProgress}}%" aria-valuenow="{{items.getProgress}}" aria-valuemin="0" aria-valuemax="100">{{items.getProgress}}%</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        {%endfor%}
+     </div>
+  
+  {%else%}
+    <p> Please use New Debt Form to get started!</p>
+  {% endif %}
+    
   </body>
 </html>
+

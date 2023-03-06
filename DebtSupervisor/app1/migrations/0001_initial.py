@@ -15,20 +15,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='expenseCategory',
+            name='Debtentry',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('category', models.CharField(max_length=128)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='expenseEntry',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('transactionAmount', models.IntegerField()),
-                ('description', models.CharField(max_length=128)),
+                ('currBalance', models.FloatField()),
+                ('TotalBalance', models.FloatField()),
+                ('Name', models.CharField(max_length=128)),
+                ('AprRate', models.FloatField()),
                 ('transactionDate', models.DateField()),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='addTransaction.expenseCategory')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

@@ -3,13 +3,35 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from app1.forms import JoinForm, LoginForm
+from app1.forms import JoinForm, LoginForm,debtForm
+from app1.models import Debtentry
+from django.contrib.auth.models import User
+
 
 
 # Create your views here.
+
+@login_required
 def home (request):
-    return render (request, 'app1/home.html')
-    return HttpResponse("Hello world!")
+    if request.user.is_authenticated:
+        if Debtentry.objects.filter(user=request.user).count() > 0:
+            table_data = Debtentry.objects.filter(user=request.user).order_by('-transactionDate')
+            total_balance = 0
+            for items in table_data:
+                total_balance = items.currBalance + total_balance
+            
+            context={
+                "table_data":table_data,
+                "total_balance":total_balance
+            }
+
+            return render (request, 'app1/home.html',context)
+        else:
+            return render (request, 'app1/home.html')
+
+    else:
+        return render (request, 'app1/home.html')
+        
 
 def join(request):
     if (request.method == "POST"):
@@ -99,3 +121,31 @@ def calculate_affordability(request):
 
         # Render the template with the data
         return render(request, 'app1/result.html', context)
+
+@login_required
+def addDebt(request):
+    if(request.method == "POST"):
+        add_form = debtForm(request.POST)
+        if(add_form.is_valid()):
+            currBalance = add_form.cleaned_data["currBalance"]
+            TotalBalance = add_form.cleaned_data["TotalBalance"]
+            Name = add_form.cleaned_data["Name"]
+            AprRate = add_form.cleaned_data["AprRate"]
+            transactionDate = add_form.cleaned_data["transactionDate"]
+
+            user = User.objects.get(id=request.user.id)
+
+            Debtentry(user=user, currBalance = currBalance, TotalBalance=TotalBalance, Name=Name,AprRate=AprRate,transactionDate=transactionDate).save()
+            return redirect("/")
+        else:
+            context={
+                "form_data": add_form
+            }
+    else:
+        context = {
+            "form_data":debtForm()
+        }
+        return render(request,'app1/addDebtform.html',context)
+    return render(request,'app1/addDebtform.html',context)
+
+   

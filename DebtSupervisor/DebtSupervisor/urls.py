@@ -29,5 +29,5 @@ urlpatterns = [
     path('transaction/edit/<int:id>',addTransaction_views.edit),
     path('afford/',app1_views.afford),
     path('result/', app1_views.calculate_affordability, name='calculate_affordability'),
-    
+    path('addDebt/',app1_views.addDebt),
 ]

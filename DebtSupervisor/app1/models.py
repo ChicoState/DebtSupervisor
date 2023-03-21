@@ -6,6 +6,7 @@ import math
 class Debtentry(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     currBalance = models.FloatField()
+    minimumPayment = models.FloatField()
     TotalBalance = models.FloatField()
     Name = models.CharField(max_length=128)
     AprRate = models.FloatField()

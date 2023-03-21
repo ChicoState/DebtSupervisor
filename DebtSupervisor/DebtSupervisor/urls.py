@@ -30,4 +30,5 @@ urlpatterns = [
     path('afford/',app1_views.afford),
     path('result/', app1_views.calculate_affordability, name='calculate_affordability'),
     path('addDebt/',app1_views.addDebt),
+    path('debt/edit/<int:id>',app1_views.edit),
 ]

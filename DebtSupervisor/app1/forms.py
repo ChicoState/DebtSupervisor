@@ -20,11 +20,15 @@ class LoginForm(forms.Form):
 
 class debtForm(forms.ModelForm):
     currBalance = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Current Balance"}))
+    minimumPayment = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Minimum Payment"}))
+
     TotalBalance = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Total Available"}))
+
     Name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':"Name"}))
     AprRate = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"APR Rate"}))
-    transactionDate = forms.DateField(widget=forms.DateInput(attrs={'placeholder':"MM-DD-YYYY"}))
+    transactionDate = forms.DateField(widget=forms.DateInput(attrs={'placeholder':"MM/DD/YYYY"}))
+ 
 
     class Meta():
         model = Debtentry
-        fields = ('currBalance','TotalBalance','Name','AprRate','transactionDate')
+        fields = ('currBalance','minimumPayment','TotalBalance','Name','AprRate','transactionDate')

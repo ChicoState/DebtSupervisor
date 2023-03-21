@@ -128,6 +128,7 @@ def addDebt(request):
         add_form = debtForm(request.POST)
         if(add_form.is_valid()):
             currBalance = add_form.cleaned_data["currBalance"]
+            minimumPayment = add_form.cleaned_data["minimumPayment"]
             TotalBalance = add_form.cleaned_data["TotalBalance"]
             Name = add_form.cleaned_data["Name"]
             AprRate = add_form.cleaned_data["AprRate"]
@@ -135,7 +136,7 @@ def addDebt(request):
 
             user = User.objects.get(id=request.user.id)
 
-            Debtentry(user=user, currBalance = currBalance, TotalBalance=TotalBalance, Name=Name,AprRate=AprRate,transactionDate=transactionDate).save()
+            Debtentry(user=user, currBalance = currBalance,minimumPayment = minimumPayment, TotalBalance=TotalBalance, Name=Name,AprRate=AprRate,transactionDate=transactionDate).save()
             return redirect("/")
         else:
             context={
@@ -148,4 +149,27 @@ def addDebt(request):
         return render(request,'app1/addDebtform.html',context)
     return render(request,'app1/addDebtform.html',context)
 
-   
+@login_required(login_url ='/login/')
+def edit(request,id):
+    if(request.method == "GET"):
+        debtentry = Debtentry.objects.get(id=id)
+        form = debtForm(instance = debtentry)
+        context={"form_data":form}
+        return render(request,'app1/editDebt.html',context)
+    elif(request.method == "POST"):
+        if("edit" in request.POST):
+            form = debtForm(request.POST)
+            if(form.is_valid()):
+                debtentry = form.save(commit=False)
+                debtentry.user = request.user
+                debtentry.id =id
+                debtentry.save()
+                return redirect("/home/")
+            else:
+                context = {
+                    "form_data":form
+                }
+                return render(request,'app1/home.html',context)
+
+        else:
+            return redirect("/home/")

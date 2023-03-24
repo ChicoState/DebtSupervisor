@@ -1,6 +1,7 @@
 from django import forms
 from addTransaction.models import expenseEntry, expenseCategory
 from dataclasses import fields
+from tkinter import Widget
 from django.core import validators
 from django.forms import CharField, ModelForm, Textarea
 from django.contrib.auth.models import User

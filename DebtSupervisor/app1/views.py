@@ -7,19 +7,17 @@ from app1.forms import JoinForm, LoginForm,debtForm
 from app1.models import Debtentry
 from django.contrib.auth.models import User
 
-
-
 # Create your views here.
 
-@login_required
+@login_required(login_url='/login/')
 def home (request):
     if request.user.is_authenticated:
         if Debtentry.objects.filter(user=request.user).count() > 0:
-            table_data = Debtentry.objects.filter(user=request.user).order_by('-transactionDate')
+            table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
             total_balance = 0
             for items in table_data:
                 total_balance = items.currBalance + total_balance
-            
+
             context={
                 "table_data":table_data,
                 "total_balance":total_balance
@@ -31,7 +29,37 @@ def home (request):
 
     else:
         return render (request, 'app1/home.html')
-        
+
+@login_required(login_url='/login/')
+def addDebt(request):
+    if(request.method == "POST"):
+        add_form = debtForm(request.POST)
+        if(add_form.is_valid()):
+            user = User.objects.get(id=request.user.id)
+            type = add_form.cleaned_data["type"]
+            name = add_form.cleaned_data["name"]
+            currBalance = add_form.cleaned_data["currBalance"]
+            TotalBalance = add_form.cleaned_data["TotalBalance"]
+            apr = add_form.cleaned_data["apr"]
+            minPayment = add_form.cleaned_data["minPayment"]
+            dueDate = add_form.cleaned_data["dueDate"]
+
+            Debtentry(user=user, type=type, name=name, currBalance=currBalance, TotalBalance=TotalBalance, apr=apr, minPayment=minPayment, dueDate=dueDate).save()
+            return redirect("/")
+        else:
+            context={
+                "form_data": add_form
+            }
+    else:
+        context = {
+            "form_data":debtForm()
+        }
+        return render(request,'app1/addDebtform.html',context)
+    return render(request,'app1/addDebtform.html',context)
+
+@login_required(login_url='/login/')
+def afford (request):
+    return render (request, 'app1/Afford.html')
 
 def join(request):
     if (request.method == "POST"):
@@ -39,16 +67,16 @@ def join(request):
         if (join_form.is_valid()):
             # Save form data to DB
             user = join_form.save()
-            # Encrypt the password 
+            # Encrypt the password
             user.set_password(user.password)
-            # Save encrypted password to DB 
+            # Save encrypted password to DB
             user.save()
             # Success! Redirect to home page.
             return redirect("/")
         else:
             # Form invalid, print errors to console
             page_data = { "join_form": join_form }
-            return render(request, 'app1/join.html', page_data)
+            return render(login_url='/login/')(request, 'app1/join.html', page_data)
     else:
         join_form = JoinForm()
         page_data = { "join_form": join_form }
@@ -56,44 +84,40 @@ def join(request):
 
 def user_login(request):
     if (request.method == 'POST'):
-        login_form = LoginForm(request.POST) 
+        login_form = LoginForm(request.POST)
         if login_form.is_valid():
-            # First get the username and password supplied 
-            username = login_form.cleaned_data["username"] 
-            password = login_form.cleaned_data["password"] 
+            # First get the username and password supplied
+            username = login_form.cleaned_data["username"]
+            password = login_form.cleaned_data["password"]
             # Django's built-in authentication function:
-            user = authenticate(username=username, password=password) 
+            user = authenticate(username=username, password=password)
         # If we have a user
         if user:
-            #Check it the account is active 
+            #Check it the account is active
             if user.is_active:
-                # Log the user in. 
+                # Log the user in.
                 login(request,user)
-                # Send the user back to homepage 
+                # Send the user back to homepage
                 return redirect("/")
             else:
             # If account is not active:
                 return HttpResponse("Your account is not active.")
         else:
             print("Someone tried to login and failed.")
-            print("They used username: {} and password: {}".format(username,password)) 
+            print("They used username: {} and password: {}".format(username,password))
             return render(request, 'app1/login.html', {"login_form": LoginForm})
     else:
         #Nothing has been provided for username or password.
         return render(request, 'app1/login.html', {"login_form": LoginForm})
-    
-def user_logout(request): 
-    # Log out the user. 
-    logout(request)
-    # Return to homepage. 
-    return redirect("/")
 
-def afford (request):
-    return render (request, 'app1/Afford.html')
+def user_logout(request):
+    # Log out the user.
+    logout(request)
+    # Return to homepage.
+    return redirect("/")
 
 def result(request):
     return render (request, 'app1/result.html')
-
 
 def calculate_affordability(request):
     if request.method == 'POST':
@@ -104,7 +128,7 @@ def calculate_affordability(request):
 
         # Calculate affordability
         affordability = monthly_income - monthly_expenses - cost_of_purchase
-        
+
         # Calculate dispoable_income
         disposable_income = monthly_income -  monthly_expenses
 
@@ -121,31 +145,3 @@ def calculate_affordability(request):
 
         # Render the template with the data
         return render(request, 'app1/result.html', context)
-
-@login_required
-def addDebt(request):
-    if(request.method == "POST"):
-        add_form = debtForm(request.POST)
-        if(add_form.is_valid()):
-            currBalance = add_form.cleaned_data["currBalance"]
-            TotalBalance = add_form.cleaned_data["TotalBalance"]
-            Name = add_form.cleaned_data["Name"]
-            AprRate = add_form.cleaned_data["AprRate"]
-            transactionDate = add_form.cleaned_data["transactionDate"]
-
-            user = User.objects.get(id=request.user.id)
-
-            Debtentry(user=user, currBalance = currBalance, TotalBalance=TotalBalance, Name=Name,AprRate=AprRate,transactionDate=transactionDate).save()
-            return redirect("/")
-        else:
-            context={
-                "form_data": add_form
-            }
-    else:
-        context = {
-            "form_data":debtForm()
-        }
-        return render(request,'app1/addDebtform.html',context)
-    return render(request,'app1/addDebtform.html',context)
-
-   

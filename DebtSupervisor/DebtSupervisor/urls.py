@@ -18,16 +18,20 @@ from django.urls import path
 from app1 import views as app1_views
 from addTransaction import views as addTransaction_views
 urlpatterns = [
-    path('admin/', admin.site.urls), 
+    path('admin/', admin.site.urls),
     path('',app1_views.home),
     path('home/',app1_views.home),
-    path('join/', app1_views.join),
-    path('login/', app1_views.user_login),
-    path('logout/', app1_views.user_logout),
+
+    path('addDebt/',app1_views.addDebt, name='addDebt'),
+
+    path('afford/',app1_views.afford),
+    path('result/', app1_views.calculate_affordability, name='calculate_affordability'),
+
     path('transaction/',addTransaction_views.transactions),
     path('transaction/addtransaction', addTransaction_views.add),
     path('transaction/edit/<int:id>',addTransaction_views.edit),
-    path('afford/',app1_views.afford),
-    path('result/', app1_views.calculate_affordability, name='calculate_affordability'),
-    path('addDebt/',app1_views.addDebt),
+
+    path('join/', app1_views.join),
+    path('login/', app1_views.user_login),
+    path('logout/', app1_views.user_logout),
 ]

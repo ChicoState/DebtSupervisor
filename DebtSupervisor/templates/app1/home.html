@@ -9,11 +9,11 @@
   {% load humanize %}
 </head>
   <body>
+        {% include "navigation.html" %}
     <div class="container">
-    {% include "navigation.html" %}
-  
+
     {%if table_data%}
-      
+
       <br>
       <div class ="row">
         <div class ="col">
@@ -33,11 +33,11 @@
         <div class = "col-8">
           <h1>My Debts</h1>
           {%for items in table_data%}
-          
+
 
               <div class="card mb-3" >
                 <div class="card-body">
-                
+
                   <div class=" d-flex justify-content-between">
                   <h5 class="card-title">{{items.Name}}</h5>
                   <button type="button" class="btn btn-light">
@@ -48,7 +48,7 @@
                 </div>
                   <p class="card-text">Current Balance: ${{items.currBalance|floatformat:2|intcomma}}</p>
                   <p class="card-text">Total Available: ${{items.TotalBalance|floatformat:2|intcomma}}</p>
-                  <p class="card-text">Rate: {{items.AprRate|floatformat:2}}%</p>
+                  <p class="card-text">Rate: {{items.apr|floatformat:2}}%</p>
                   <p>Usage:</p>
                   <div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: {{items.getProgress}}%" aria-valuenow="{{items.getProgress}}" aria-valuemin="0" aria-valuemax="100">{{items.getProgress}}%</div>
@@ -56,15 +56,15 @@
                 </div>
 
               </div>
-            
+
           {%endfor%}
           </div>
      </div>
-  
+
   {%else%}
     <p> Please use New Debt Form to get started!</p>
+    <button onclick="location.href='{% url 'addDebt' %}'"> Add Debt </button>
   {% endif %}
     </div>
   </body>
 </html>
-

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import math
+from app1.utils import calculate_payoff
 # Create your models here.
 
 class Debtentry(models.Model):
@@ -35,3 +36,13 @@ class Debtentry(models.Model):
 
     def getProgress(self):
         return math.ceil((self.currBalance/self.TotalBalance)*100)
+    
+    @property
+    def months_to_payoff(self):
+        months,_ = calculate_payoff(self.currBalance, self.minPayment, self.apr)
+        return months
+    
+    @property
+    def total_interest(self):
+        _,total_interest = calculate_payoff(self.currBalance, self.minPayment, self.apr)
+        return round(total_interest, 2)

@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.forms import CharField, ModelForm, Textarea
 from app1.models import Debtentry
+from app1.utils import calculate_payoff
 
 class JoinForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}))

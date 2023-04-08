@@ -16,14 +16,23 @@ def home (request):
         if Debtentry.objects.filter(user=request.user).count() > 0:
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
             total_balance = 0
+            nth_debt = 0
+            user_debt = []
+            debt_category = []
             for items in table_data:
                 total_balance = items.currBalance + total_balance
+                debt_category.append(items.type)
+                nth_debt += items.currBalance
+                user_debt.append(nth_debt)
+            debt_category = list(set(debt_category))
 
             context={
                 "table_data":table_data,
-                "total_balance":total_balance
+                "total_balance":total_balance,
+                "debt_category":debt_category,
+                "user_debt":user_debt
             }
-
+    
             return render (request, 'app1/home.html',context)
         else:
             return render (request, 'app1/home.html')
@@ -80,6 +89,7 @@ def join(request):
             return render(login_url='/login/')(request, 'app1/join.html', page_data)
     else:
         join_form = JoinForm()
+        ##join_form.fields["username"].help_text = ""
         page_data = { "join_form": join_form }
         return render(request, 'app1/join.html', page_data)
 

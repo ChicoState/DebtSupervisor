@@ -97,4 +97,45 @@
       {% endif %}
     </div>
   </body>
+  <head>
+    <title>My Doughnut Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <canvas id="myChart"></canvas>
+    <script>
+      const data = {
+        labels: [
+          {% for item in debt_category%}
+            {{item}},
+          {% endfor %}
+         ]
+        datasets: [{
+          label: 'My First Dataset',
+          data: [
+            {% for item in user_debt %}
+              {{item}},
+            {%% endfor %%}
+            ]
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+          ],
+          hoverOffset: 4
+        }]
+      };
+
+      const config = {
+        type: 'doughnut',
+        data: data,
+        options: {}
+      };
+
+      var myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
+    </script>
+  </body>  
 </html>

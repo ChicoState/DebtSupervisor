@@ -23,6 +23,7 @@ urlpatterns = [
     path('home/',app1_views.home),
 
     path('addDebt/',app1_views.addDebt, name='addDebt'),
+    path('debt/edit/<int:id>',app1_views.edit),
 
     path('afford/',app1_views.afford),
     path('result/', app1_views.calculate_affordability, name='calculate_affordability'),

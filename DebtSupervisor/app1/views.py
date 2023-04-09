@@ -16,12 +16,17 @@ def home (request):
         if Debtentry.objects.filter(user=request.user).count() > 0:
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
             total_balance = 0
+            credit_limit = 0
             for items in table_data:
                 total_balance = items.currBalance + total_balance
-
+                credit_limit = credit_limit + items.TotalBalance
+            cru = (total_balance/credit_limit)
             context={
                 "table_data":table_data,
-                "total_balance":total_balance
+                "total_balance":total_balance,
+                "credit_limit": credit_limit,
+                "cru": cru,
+
             }
 
             return render (request, 'app1/home.html',context)

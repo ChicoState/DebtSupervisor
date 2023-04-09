@@ -19,9 +19,9 @@
 
       <div class="row">
         <div class="col-4">
-          <h1>Welcome User!</h1>
-          <img src="{% static 'user.png' %}" class="rounded-circle" style="padding-bottom: 20px;" />
-          <div class="card">
+          <h1 style="text-align:center;">Welcome User!</h1>
+          <img src="{% static 'user.png' %}" class="rounded-circle" style="padding-bottom: 20px;display: block;margin-left: auto;margin-right: auto;" />
+          <div class="card" >
             <div class="card-body">
               <h5 class="card-title">Credit Usage:</h5>
               <p class="card-text">{{total_balance|floatformat:2|intcomma}} / {{credit_limit|floatformat:2|intcomma}} USD</p>

@@ -3,34 +3,49 @@
   <html>
     <head>
       {% load static %}
+      <meta charset="utf-8" />
       <title>Can I Afford It?</title>
       <!--bootstrap includes-->
       {% include "bootstrap.html" %}
+      {%load humanize %}
       <!--end bootstrap includes-->
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="stylesheet" type="text/css" href="Afford.css" />
     </head>
     <body>
       {% include "navigation.html" %}
-      <h2>Can I Afford It?</h2>
-      <nav>
-        <ul>
-          <lis><a href="/">Home</a></li><br>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Can I Afford It?</h1>
+            <hr />
+          </div>
+        <br />
 
-            <p1> Check if you can afford a purchase by using the calculator. </p>
+        <div class="row">
+        <div class="col">
+          <p>
+            Check if you can afford a purchase by using the calculator.
+          </p>
+
       <form method="POST" action="{% url 'calculate_affordability' %}">
         {% csrf_token %}
+        <div class="form-group">
         <label for="monthly_income">Monthly Income:</label>
-        <input type="number" name="monthly_income" required />
-        <br />
+        <input type="number" name="monthly_income" class="form-control" required />
+        </div>
+        <div class="form-group">
         <label for="monthly_expenses">Monthly Expenses:</label>
-        <input type="number" name="monthly_expenses" required />
-        <br />
+        <input type="number" name="monthly_expenses" class="form-control" required />
+        </div>
+        <div class="form-group">
+        <label for="monthly_savings">Monthly Savings:</label>
+        <input type="number" name="monthly_savings" class="form-control" required />
+        </div>
+        <div class="form-group">
         <label for="cost_of_purchase">Cost of Purchase:</label>
-        <input type="number" name="cost_of_purchase" required />
-        <br />
-        <button type="submit">Calculate</button>
+        <input type="number" name="cost_of_purchase" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Calculate</button>
       </form>
     </body>
   </html>

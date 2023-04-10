@@ -7,6 +7,8 @@ from app1.forms import JoinForm, LoginForm,debtForm
 from app1.models import Debtentry
 from django.contrib.auth.models import User
 from math import ceil
+import datetime
+from dateutil.relativedelta import *
 
 # Create your views here.
 
@@ -17,9 +19,18 @@ def home (request):
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
             total_balance = 0
             credit_limit = 0
+
+            #checks if due date is passed 
+            for items in table_data:
+                if items.dueDate < datetime.date.today():
+                    items.dueDate = items.dueDate+relativedelta(months=+1)
+                    items.save()
+                    
             for items in table_data:
                 total_balance = items.currBalance + total_balance
                 credit_limit = credit_limit + items.TotalBalance
+        
+
             cru = (total_balance/credit_limit)
             context={
                 "table_data":table_data,
@@ -173,3 +184,30 @@ def calculate_affordability(request):
 
         # Render the template with the data
         return render(request, 'app1/result.html', context)
+
+@login_required(login_url ='/login/')
+def edit(request,id):
+    if(request.method == "GET"):
+        debtentry = Debtentry.objects.get(id=id)
+        name = debtentry.name
+        form = debtForm(instance = debtentry)
+        context={"form_data":form,
+                 "name":name,}
+        return render(request,'app1/editDebt.html',context)
+    elif(request.method == "POST"):
+        if("edit" in request.POST):
+            form = debtForm(request.POST)
+            if(form.is_valid()):
+                debtentry = form.save(commit=False)
+                debtentry.user = request.user
+                debtentry.id =id
+                debtentry.save()
+                return redirect("/home/")
+            else:
+                context = {
+                    "form_data":form
+                }
+                return render(request,'app1/home.html',context)
+
+        else:
+            return redirect("/home/")

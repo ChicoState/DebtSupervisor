@@ -99,24 +99,24 @@
   </body>
   <head>
     <title>My Doughnut Chart</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.min.js"></script>
   </head>
   <body>
     <canvas id="myChart"></canvas>
     <script>
       const data = {
         labels: [
-          {% for item in debt_category%}
+          {% for item in debt_category %}
             {{item}},
           {% endfor %}
-         ]
+        ],
         datasets: [{
           label: 'My First Dataset',
           data: [
             {% for item in user_debt %}
               {{item}},
-            {%% endfor %%}
-            ]
+            {% endfor %}
+          ],
           backgroundColor: [
             'rgb(255, 99, 132)',
             'rgb(54, 162, 235)',
@@ -125,7 +125,7 @@
           hoverOffset: 4
         }]
       };
-
+      
       const config = {
         type: 'doughnut',
         data: data,

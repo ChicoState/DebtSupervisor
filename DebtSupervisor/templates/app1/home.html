@@ -6,6 +6,7 @@
     <title>Debt Supervisor Project</title>
     <!--bootstrap includes-->
     {% include "bootstrap.html" %} {% load humanize %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     {% include "navigation.html" %}
@@ -26,7 +27,9 @@
         <div class="col-4">
           <h1>Welcome User!</h1>
           <img src="{% static 'user.png' %}" class="rounded-circle" alt="..." />
+          <canvas id="myChart"></canvas>
         </div>
+        
         <div class="col-8">
           <h1>My Debts</h1>
           {%for items in table_data%}
@@ -96,46 +99,43 @@
       <button onclick="location.href='{% url 'addDebt' %}'">Add Debt</button>
       {% endif %}
     </div>
-  </body>
-  <head>
-    <title>My Doughnut Chart</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.min.js"></script>
-  </head>
-  <body>
-    <canvas id="myChart"></canvas>
-    <script>
-      const data = {
-        labels: [
-          {% for item in debt_category %}
-            {{item}},
-          {% endfor %}
-        ],
-        datasets: [{
-          label: 'My First Dataset',
-          data: [
-            {% for item in user_debt %}
-              {{item}},
-            {% endfor %}
-          ],
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
-          ],
-          hoverOffset: 4
-        }]
-      };
-      
-      const config = {
-        type: 'doughnut',
-        data: data,
-        options: {}
-      };
-
-      var myChart = new Chart(
-        document.getElementById('myChart'),
-        config
-      );
-    </script>
   </body>  
+    <script>
+     
+      var ctx = document.getElementById("myChart");
+      var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: [  {% for item in debt_category %}
+          '{{item}}',
+        {% endfor %}],
+          datasets: [{
+            label: 'Total Balance',
+            data: [{% for item in user_debt %}
+                    {{item}},
+                  {% endfor %}],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+         
+          responsive: false,
+      
+        }
+      });
+      
+    </script>
+ 
 </html>

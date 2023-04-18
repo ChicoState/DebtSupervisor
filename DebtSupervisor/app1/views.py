@@ -15,17 +15,28 @@ def home (request):
     if request.user.is_authenticated:
         if Debtentry.objects.filter(user=request.user).count() > 0:
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
+            sorted_data = sorted(table_data, key=lambda x: x.dueDate)
             total_balance = 0
+            same_debt = 0
             nth_debt = 0
+            prev_value = None
             user_debt = []
             debt_category = []
             for items in table_data:
                 total_balance = items.currBalance + total_balance
                 debt_category.append(items.type)
-                nth_debt += items.currBalance
-                user_debt.append(nth_debt)
+            for data in sorted_data:
+                current_value = data.type
+                if current_value == prev_value:
+                    same_debt += data.currBalance
+                    user_debt.append(same_debt)
+                else:
+                    prev_value = current_value
+                    same_debt = data.currBalance
+                    nth_debt += data.currBalance
+                    user_debt.append(nth_debt)
             debt_category = list(set(debt_category))
-
+            
             context={
                 "table_data":table_data,
                 "total_balance":total_balance,

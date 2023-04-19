@@ -14,21 +14,35 @@
     <div class="container">
       {%if table_data%}
 
-      <br/>
+      <br />
 
       <div class="row">
         <div class="col-4">
-          <h1 style="text-align:center;">Welcome {{user.username}}!</h1>
-          <img src="{% static 'user.png' %}" class="rounded-circle" style="padding-bottom: 20px;display: block;margin-left: auto;margin-right: auto;" />
-          <div class="card" >
+          <h1 style="text-align: center">Welcome {{user.username}}!</h1>
+          <img
+            src="{% static 'user.png' %}"
+            class="rounded-circle"
+            style="
+              padding-bottom: 20px;
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+            "
+          />
+          <div class="card">
             <div class="card-body">
               <h5 class="card-title">Credit Usage:</h5>
-              <p class="card-text">{{total_balance|floatformat:2|intcomma}} / {{credit_limit|floatformat:2|intcomma}} USD</p>
-              <div id="container" style = "margin: 20px; width: 200px;height: 100px;"></div>
+              <p class="card-text">
+                {{total_balance|floatformat:2|intcomma}} /
+                {{credit_limit|floatformat:2|intcomma}} USD
+              </p>
+              <div
+                id="container"
+                style="margin: 20px; width: 200px; height: 100px"
+              ></div>
             </div>
           </div>
           <p>Tip: Keep credit usage to a minimum to increase credit score!</p>
-
         </div>
         <div class="col-8">
           <h1>My Debts</h1>
@@ -38,7 +52,7 @@
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <h5 class="card-title">{{items.name}}</h5>
-                <a href="/debt/edit/{{items.id}}" class = "btn btn-light">
+                <a href="/debt/edit/{{items.id}}" class="btn btn-light">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -93,6 +107,16 @@
           {%endfor%}
         </div>
       </div>
+      <br/>
+      <div>
+        <div class="row">
+          <div class="col-12">
+            <h2 class="text-center">Due Date Calendar</h2>
+            <div id="calendar"></div>
+          </div>
+        </div>
+      </div>
+    </br>
 
       {%else%}
       <p>Please use New Debt Form to get started!</p>
@@ -102,36 +126,52 @@
   </body>
 
   <script>
-    var bar = new ProgressBar.SemiCircle(container, {
-    strokeWidth: 6,
-    color: '#00FF00',
-    trailColor: '#eee',
-    trailWidth: 1,
-    easing: 'easeInOut',
-    duration: 1400,
-    svgStyle: null,
-    text: {
-      value: '',
-      alignToBottom: false
-    },
-    from: {color: '#77fc03'},
-    to: {color: '#fc2c03'},
-    // Set default step function for all animate calls
-    step: (state, bar) => {
-      bar.path.setAttribute('stroke', state.color);
-      var value = Math.round(bar.value() * 100);
-      if (value === 0) {
-        bar.setText('');
-      } else {
-        bar.setText(value+'%');
+      var bar = new ProgressBar.SemiCircle(container, {
+      strokeWidth: 6,
+      color: '#00FF00',
+      trailColor: '#eee',
+      trailWidth: 1,
+      easing: 'easeInOut',
+      duration: 1400,
+      svgStyle: null,
+      text: {
+        value: '',
+        alignToBottom: false
+      },
+      from: {color: '#77fc03'},
+      to: {color: '#fc2c03'},
+      // Set default step function for all animate calls
+      step: (state, bar) => {
+        bar.path.setAttribute('stroke', state.color);
+        var value = Math.round(bar.value() * 100);
+        if (value === 0) {
+          bar.setText('');
+        } else {
+          bar.setText(value+'%');
+        }
+
+        bar.text.style.color = state.color;
       }
+    });
+    bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+    bar.text.style.fontSize = '2rem';
 
-      bar.text.style.color = state.color;
-    }
-  });
-  bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
-  bar.text.style.fontSize = '2rem';
+    bar.animate({{cru|floatformat:2}});
+  </script>
 
-  bar.animate({{cru|floatformat:2}});
-</script>
+  <script>
+    $(document).ready(function() {
+      $('#calendar').fullCalendar({
+        events: [
+          {% for items in table_data %}
+          {
+            title: '{{items.name}}',
+            start: '{{items.dueDate|date:"Y-m-d"}}T23:59:00',
+            url: '/debt/edit/{{items.id}}'
+          },
+          {% endfor %}
+        ]
+      });
+    });
+  </script>
 </html>

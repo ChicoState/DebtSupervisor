@@ -9,9 +9,10 @@ from django.contrib.auth.models import User
 from math import ceil
 import datetime
 from dateutil.relativedelta import *
+from app1.models import UserProfile
+from app1.forms import UserProfileForm
 
 # Create your views here.
-
 @login_required(login_url='/login/')
 def home (request):
     if request.user.is_authenticated:
@@ -20,16 +21,16 @@ def home (request):
             total_balance = 0
             credit_limit = 0
 
-            #checks if due date is passed 
+            #checks if due date is passed
             for items in table_data:
                 if items.dueDate < datetime.date.today():
                     items.dueDate = items.dueDate+relativedelta(months=+1)
                     items.save()
-                    
+
             for items in table_data:
                 total_balance = items.currBalance + total_balance
                 credit_limit = credit_limit + items.TotalBalance
-        
+
 
             cru = (total_balance/credit_limit)
             context={
@@ -46,6 +47,26 @@ def home (request):
 
     else:
         return render (request, 'app1/home.html')
+
+@login_required(login_url='/login/')
+def updateProfilePic(request):
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        # create a new UserProfile object for the user if one doesn't exist yet
+        user_profile = UserProfile.objects.create(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect("/")
+    else:
+        form = UserProfileForm(instance=user_profile)
+    context = {
+        'form': form,
+    }
+    return render(request, 'app1/updateProfilePic.html', context)
 
 @login_required(login_url='/login/')
 def addDebt(request):
@@ -153,16 +174,16 @@ def calculate_affordability(request):
         # (NEW!) calculate the expenses percentage and savings percentage
         expenses_percentage = monthly_expenses / monthly_income * 100
         savings_percentage = monthly_savings / monthly_income * 100
-        
+
         #Check conditions if they can afford something
         high_expenses = expenses_percentage > 50
         low_savings = savings_percentage < 20
         cost_too_high = cost_of_purchase > 0.3 * monthly_income
-        
+
         #Caluclate the savings on needs to pay the cost of purchase within 6 months
-        saving_per_month = cost_of_purchase / 6 
+        saving_per_month = cost_of_purchase / 6
         savings_per_month = cost_of_purchase / 12
-        
+
 
         # Create a dictionary of data to pass to the template
         context = {

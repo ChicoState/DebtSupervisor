@@ -3,6 +3,13 @@ from django import forms
 from django.forms import CharField, ModelForm, Textarea
 from app1.models import Debtentry
 from app1.utils import calculate_payoff
+from app1.models import UserProfile
+
+class UserProfileForm(forms.ModelForm):
+    profilePic = forms.ImageField(label="Profile Picture")
+    class Meta:
+        model = UserProfile
+        fields = ('profilePic', )
 
 class JoinForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}))

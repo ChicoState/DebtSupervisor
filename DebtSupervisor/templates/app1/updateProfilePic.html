@@ -1,0 +1,21 @@
+<html>
+    <head>
+        {% include "bootstrap.html" %}
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="/static/updateProfilePicture.css">
+    </head>
+    <body>
+        {% include "navigation.html" %}
+        <div class="container">
+          <h2>Update Profile Picture</h2>
+          <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <div class="form-group col-md-6">
+                <input type="submit" class="btn btn-info" value="Save">
+                <a href="/" class="btn btn-secondary">Cancel</a>
+              </div>
+          </form>
+        </div>
+    </body>
+</html>

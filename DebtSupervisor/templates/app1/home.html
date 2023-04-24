@@ -5,43 +5,55 @@
     <meta charset="utf-8" />
     <title>Debt Supervisor Project</title>
     <script src="https://cdn.jsdelivr.net/gh/kimmobrunfeldt/progressbar.js/dist/progressbar.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="/static/updateProfilePicture.css">
     <!--bootstrap includes-->
     {% include "bootstrap.html" %} {% load humanize %}
   </head>
   <body>
     {% include "navigation.html" %}
     <div class="container">
-      {%if table_data%}
-
-      <br />
 
       <div class="row">
-        <div class="col-4">
-          <h1 style="text-align: center">Welcome {{user.username}}!</h1>
-          <img
-            src="{% static 'user.png' %}"
-            class="rounded-circle"
-            style="
-              padding-bottom: 20px;
-              display: block;
-              margin-left: auto;
-              margin-right: auto;
-            "
-          />
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Credit Usage:</h5>
-              <p class="card-text">
-                {{total_balance|floatformat:2|intcomma}} /
-                {{credit_limit|floatformat:2|intcomma}} USD
-              </p>
-              <div
-                id="container"
-                style="margin: 20px; width: 200px; height: 100px"
-              ></div>
-            </div>
+              <div class="col-4">
+                <h1 style="text-align:center;">Welcome {{user.username}}!</h1>
+
+                {% if user.userprofile.profilePic %}
+                <div class="profile-pic">
+                  <a href="{% url 'updateProfilePic' %}">
+                    <img src="{{ user.userprofile.profilePic.url }}" class="rounded-circle" style="max-width: 280px; max-height: 280px;" />
+                    <div class="profile-pic-overlay">
+                      <span>Update Profile Picture</span>
+                    </div>
+                  </a>
+                </div>
+                {% else %}
+                <div class="profile-pic">
+                  <a href="{% url 'updateProfilePic' %}">
+                    <img src="{% static 'user.png' %}" class="rounded-circle" style="max-width: 280px; max-height: 280px;" />
+                    <div class="profile-pic-overlay">
+                      <span>Update Profile Picture</span>
+                    </div>
+                  </a>
+                </div>
+                {% endif %}
+
+
+
+
+      {%if table_data%}
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Credit Usage:</h5>
+            <p class="card-text">
+              {{total_balance|floatformat:2|intcomma}} /
+              {{credit_limit|floatformat:2|intcomma}} USD
+            </p>
+            <div
+              id="container"
+              style="margin: 20px; width: 200px; height: 100px"
+            ></div>
           </div>
+        </div>
           <p>Tip: Keep credit usage to a minimum to increase credit score!</p>
         </div>
         <div class="col-8">

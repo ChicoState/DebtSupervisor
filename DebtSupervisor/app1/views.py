@@ -21,26 +21,23 @@ def home (request):
             total_balance = 0
             credit_limit = 0
 
-            #checks if due date is passed
+            #checks if due date is passed 
             for items in table_data:
                 if items.dueDate < datetime.date.today():
                     items.dueDate = items.dueDate+relativedelta(months=+1)
                     items.save()
-
+                    
             for items in table_data:
                 total_balance = items.currBalance + total_balance
                 credit_limit = credit_limit + items.TotalBalance
-
+        
 
             cru = (total_balance/credit_limit)
             context={
                 "table_data":table_data,
-                "total_balance":total_balance,
-                "credit_limit": credit_limit,
-                "cru": cru,
-
+                "total_balance":total_balance
             }
-
+    
             return render (request, 'app1/home.html',context)
         else:
             return render (request, 'app1/home.html')
@@ -117,6 +114,7 @@ def join(request):
             return render(login_url='/login/')(request, 'app1/join.html', page_data)
     else:
         join_form = JoinForm()
+        ##join_form.fields["username"].help_text = ""
         page_data = { "join_form": join_form }
         return render(request, 'app1/join.html', page_data)
 

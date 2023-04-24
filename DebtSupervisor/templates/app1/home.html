@@ -136,54 +136,100 @@
       {% endif %}
     </div>
   </body>
-
-  <script>
-      var bar = new ProgressBar.SemiCircle(container, {
-      strokeWidth: 6,
-      color: '#00FF00',
-      trailColor: '#eee',
-      trailWidth: 1,
-      easing: 'easeInOut',
-      duration: 1400,
-      svgStyle: null,
-      text: {
-        value: '',
-        alignToBottom: false
-      },
-      from: {color: '#77fc03'},
-      to: {color: '#fc2c03'},
-      // Set default step function for all animate calls
-      step: (state, bar) => {
-        bar.path.setAttribute('stroke', state.color);
-        var value = Math.round(bar.value() * 100);
-        if (value === 0) {
-          bar.setText('');
-        } else {
-          bar.setText(value+'%');
-        }
-
-        bar.text.style.color = state.color;
-      }
-    });
-    bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
-    bar.text.style.fontSize = '2rem';
-
-    bar.animate({{cru|floatformat:2}});
-  </script>
-
-  <script>
-    $(document).ready(function() {
-      $('#calendar').fullCalendar({
-        events: [
-          {% for items in table_data %}
-          {
-            title: '{{items.name}}',
-            start: '{{items.dueDate|date:"Y-m-d"}}T23:59:00',
-            url: '/debt/edit/{{items.id}}'
-          },
+  <head>
+    <title>My Doughnut Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tanem/svg-progress-bar"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+  </head>
+  <body>
+    <canvas id="myChart"></canvas>
+    <div id="calendar"></div>
+    <script>
+      const data = {
+        labels: [
+          {% for item in debt_category%}
+            {{item}},
           {% endfor %}
-        ]
+         ],
+        datasets: [{
+          label: 'My First Dataset',
+          data: [
+            {% for item in user_debt %}
+              {{item}},
+            {% endfor %}
+            ],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+          ],
+          hoverOffset: 4
+        }]
+      };
+
+      const config = {
+        type: 'doughnut',
+        data: data,
+        options: {}
+      };
+
+      var myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
+    </script>
+
+    <script>
+      var bar = new ProgressBar.SemiCircle(document.body, {
+        strokeWidth: 6,
+        color: '#00FF00',
+        trailColor: '#eee',
+        trailWidth: 1,
+        easing: 'easeInOut',
+        duration: 1400,
+        svgStyle: null,
+        text: {
+          value: '',
+          alignToBottom: false
+        },
+        from: {color: '#77fc03'},
+        to: {color: '#fc2c03'},
+        // Set default step function for all animate calls
+        step: (state, bar) => {
+          bar.path.setAttribute('stroke', state.color);
+          var value = Math.round(bar.value() * 100);
+          if (value === 0) {
+            bar.setText('');
+          } else {
+            bar.setText(value+'%');
+          }
+
+          bar.text.style.color = state.color;
+        }
       });
-    });
-  </script>
+      bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+      bar.text.style.fontSize = '2rem';
+
+      bar.animate({{cru|floatformat:2}});
+    </script>
+
+    <script>
+      $(document).ready(function() {
+        $('#calendar').fullCalendar({
+          events: [
+            {% for items in table_data %}
+            {
+              title: '{{items.name}}',
+              start: '{{items.dueDate|date:"Y-m-d"}}T23:59:00',
+              url: '/debt/edit/{{items.id}}'
+            },
+            {% endfor %}
+          ]
+        });
+      });
+    </script>
+  </body>
 </html>

@@ -1,0 +1,24 @@
+.credit-card {
+  background-color: Tomato;
+}
+.auto-loan{
+  background-color: Orange;
+}
+.personal-loan {
+  background-color: Gray;
+}
+.student-loan {
+  background-color: MediumSeaGreen;
+}
+.mortgage {
+  background-color: DodgerBlue;
+}
+.medical-loan{
+  background-color: Violet;
+}
+.taxes{
+  background-color: SlateBlue;
+}
+.other {
+  background-color: LightGray;
+}

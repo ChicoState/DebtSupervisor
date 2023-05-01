@@ -15,6 +15,7 @@ from app1.forms import UserProfileForm
 # Create your views here.
 @login_required(login_url='/login/')
 def home (request):
+
     if request.user.is_authenticated:
         if Debtentry.objects.filter(user=request.user).count() > 0:
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
@@ -33,6 +34,7 @@ def home (request):
         
 
             cru = (total_balance/credit_limit)
+
             context={
                 "table_data":table_data,
                 "total_balance":total_balance

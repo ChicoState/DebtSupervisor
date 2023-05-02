@@ -2,11 +2,19 @@
     <head>
         {% include "bootstrap.html" %}
         {% load static %}
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+        <style>
+            body {
+                background-image: url('{% static "background/login.jpg" %}');
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+        </style>
     </head>
     <body>
         {% include "navigation.html" %}
-        <div class="container">
-            <div class="jumbotron">
+        <div class="container join-container">
+            <div class="jumbotron join-jumbotron">
                 <h1>Join</h1>
                 <form method = "POST">
                     {% csrf_token %}

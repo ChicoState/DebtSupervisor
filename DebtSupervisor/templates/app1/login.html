@@ -1,14 +1,23 @@
 <html>
-    <head>
-        {% include "bootstrap.html" %} 
-        {% load static %}
-    </head>
+<head>
+  {% include "bootstrap.html" %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <style>
+    body {
+      background-image: url('{% static "background/login.jpg" %}');
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  </style>
+</head>
     <body>
         {% include "navigation.html" %}
-        <div class="container">
-            <div class = "jumbotron">
-                <h1>Login</h1>
+        <div class="container login-container">
+            <div class = "jumbotron login-jumbotron">
+                <h1 class = "login-h1">Login</h1>
                 <form action="/login/" method="POST">{% csrf_token %}
+
                     <table>
                         {{ login_form.as_table }}
                         <tr><td>
@@ -18,8 +27,10 @@
                             Click <a href="/join">here</a> to join
                         </td></tr>
                     </table>
+
                 </form>
             </div>
+
         </div>
     </body>
 </html>

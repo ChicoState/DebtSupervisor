@@ -9,38 +9,45 @@
       {% include "bootstrap.html" %}
       {%load humanize %}
       <!--end bootstrap includes-->
+      <link rel="stylesheet" href="{% static 'styles.css' %}">
+      <style>
+        body {
+          background-image: url('{% static "background/home.jpg" %}');
+          background-size: cover;
+        }
+      </style>
     </head>
     <body>
       {% include "navigation.html" %}
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1>Can I Afford It?</h1>
+            <h1 class = "afford-h1">Can I Afford It?</h1>
             <hr />
           </div>
         <br />
 
         <div class="row">
         <div class="col">
-          <p>
+          <p class = "afford-p">
             Check if you can afford a purchase by using the calculator.
           </p>
 
       <form method="POST" action="{% url 'calculate_affordability' %}">
         {% csrf_token %}
-        <div class="form-group">
+        <div class="form-group afford-div">
         <label for="monthly_income">Monthly Income:</label>
         <input type="number" name="monthly_income" class="form-control" required />
         </div>
-        <div class="form-group">
+        <div class="form-group afford-div">
         <label for="monthly_expenses">Monthly Expenses:</label>
         <input type="number" name="monthly_expenses" class="form-control" required />
         </div>
-        <div class="form-group">
+        <div class="form-group afford-div">
         <label for="monthly_savings">Monthly Savings:</label>
         <input type="number" name="monthly_savings" class="form-control" required />
         </div>
-        <div class="form-group">
+        <div class="form-group afford-div">
         <label for="cost_of_purchase">Cost of Purchase:</label>
         <input type="number" name="cost_of_purchase" class="form-control" required />
         </div>

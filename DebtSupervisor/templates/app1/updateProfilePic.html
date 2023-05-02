@@ -3,11 +3,19 @@
         {% include "bootstrap.html" %}
         {% load static %}
         <link rel="stylesheet" type="text/css" href="/static/updateProfilePicture.css">
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+        <style>
+          body {
+            background-image: url('{% static "background/home.jpg" %}');
+            background-size: cover;
+          }
+        </style>
     </head>
     <body>
         {% include "navigation.html" %}
-        <div class="container">
-          <h2>Update Profile Picture</h2>
+        <div class="container update-container">
+          <div class = "jumbotron update-jumbotron"
+          <h1>Update Profile Picture</h1>
           <form method="post" enctype="multipart/form-data">
               {% csrf_token %}
               {{ form.as_p }}
@@ -16,6 +24,7 @@
                 <a href="/" class="btn btn-secondary">Cancel</a>
               </div>
           </form>
+        </div>
         </div>
     </body>
 </html>

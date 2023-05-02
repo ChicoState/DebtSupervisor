@@ -20,6 +20,7 @@ def home (request):
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
             ##sorted_data = sorted(table_data, key=lambda x: x.dueDate)
             total_balance = 0
+            
             ##same_debt = 0
             ##nth_debt = 0
             ##prev_value = None

@@ -5,6 +5,13 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from app1.models import Debtentry
 from app1.utils import calculate_payoff
+from app1.models import UserProfile
+
+class UserProfileForm(forms.ModelForm):
+    profilePic = forms.ImageField(label="Profile Picture")
+    class Meta:
+        model = UserProfile
+        fields = ('profilePic', )
 
 # validators for password
 def validate_password(value):

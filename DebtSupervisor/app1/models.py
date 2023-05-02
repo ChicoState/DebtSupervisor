@@ -4,6 +4,12 @@ import math
 from app1.utils import calculate_payoff
 # Create your models here.
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    profilePic = models.ImageField(null=True, blank=True, upload_to= "images/")
+    def __str__(self):
+        return self.user.username
+
 class Debtentry(models.Model):
     CREDIT_CARD = 'Credit Card'
     AUTO_LOAN = 'Auto Loan'
@@ -36,12 +42,12 @@ class Debtentry(models.Model):
 
     def getProgress(self):
         return math.ceil((self.currBalance/self.TotalBalance)*100)
-    
+
     @property
     def months_to_payoff(self):
         months,_ = calculate_payoff(self.currBalance, self.minPayment, self.apr)
         return months
-    
+
     @property
     def total_interest(self):
         _,total_interest = calculate_payoff(self.currBalance, self.minPayment, self.apr)

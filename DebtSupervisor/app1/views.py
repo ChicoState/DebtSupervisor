@@ -7,34 +7,37 @@ from app1.forms import JoinForm, LoginForm,debtForm
 from app1.models import Debtentry
 from django.contrib.auth.models import User
 from math import ceil
+import datetime
+from dateutil.relativedelta import *
+from app1.models import UserProfile
+from app1.forms import UserProfileForm
 
 # Create your views here.
-
 @login_required(login_url='/login/')
 def home (request):
     if request.user.is_authenticated:
         if Debtentry.objects.filter(user=request.user).count() > 0:
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
-            sorted_data = sorted(table_data, key=lambda x: x.dueDate)
+            ##sorted_data = sorted(table_data, key=lambda x: x.dueDate)
             total_balance = 0
-            same_debt = 0
-            nth_debt = 0
-            prev_value = None
-            user_debt = []
+            ##same_debt = 0
+            ##nth_debt = 0
+            ##prev_value = None
+            ##user_debt = []
             debt_category = []
             for items in table_data:
                 total_balance = items.currBalance + total_balance
                 debt_category.append(items.type)
-            for data in sorted_data:
-                current_value = data.type
-                if current_value == prev_value:
-                    same_debt += data.currBalance
-                    user_debt.append(same_debt)
-                else:
-                    prev_value = current_value
-                    same_debt = data.currBalance
-                    nth_debt += data.currBalance
-                    user_debt.append(nth_debt)
+            ##for data in sorted_data:
+                ##current_value = data.type
+                ##if current_value == prev_value:
+                    ##same_debt += data.currBalance
+                    ##user_debt.append(same_debt)
+                ##else:
+                    ##prev_value = current_value
+                    ##same_debt = data.currBalance
+                    ##nth_debt += data.currBalance
+                    ##user_debt.append(nth_debt)
             debt_category = list(set(debt_category))
             
             context={
@@ -50,6 +53,26 @@ def home (request):
 
     else:
         return render (request, 'app1/home.html')
+
+@login_required(login_url='/login/')
+def updateProfilePic(request):
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        # create a new UserProfile object for the user if one doesn't exist yet
+        user_profile = UserProfile.objects.create(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect("/")
+    else:
+        form = UserProfileForm(instance=user_profile)
+    context = {
+        'form': form,
+    }
+    return render(request, 'app1/updateProfilePic.html', context)
 
 @login_required(login_url='/login/')
 def addDebt(request):
@@ -158,16 +181,16 @@ def calculate_affordability(request):
         # (NEW!) calculate the expenses percentage and savings percentage
         expenses_percentage = monthly_expenses / monthly_income * 100
         savings_percentage = monthly_savings / monthly_income * 100
-        
+
         #Check conditions if they can afford something
         high_expenses = expenses_percentage > 50
         low_savings = savings_percentage < 20
         cost_too_high = cost_of_purchase > 0.3 * monthly_income
-        
+
         #Caluclate the savings on needs to pay the cost of purchase within 6 months
-        saving_per_month = cost_of_purchase / 6 
+        saving_per_month = cost_of_purchase / 6
         savings_per_month = cost_of_purchase / 12
-        
+
 
         # Create a dictionary of data to pass to the template
         context = {
@@ -189,3 +212,30 @@ def calculate_affordability(request):
 
         # Render the template with the data
         return render(request, 'app1/result.html', context)
+
+@login_required(login_url ='/login/')
+def edit(request,id):
+    if(request.method == "GET"):
+        debtentry = Debtentry.objects.get(id=id)
+        name = debtentry.name
+        form = debtForm(instance = debtentry)
+        context={"form_data":form,
+                 "name":name,}
+        return render(request,'app1/editDebt.html',context)
+    elif(request.method == "POST"):
+        if("edit" in request.POST):
+            form = debtForm(request.POST)
+            if(form.is_valid()):
+                debtentry = form.save(commit=False)
+                debtentry.user = request.user
+                debtentry.id =id
+                debtentry.save()
+                return redirect("/home/")
+            else:
+                context = {
+                    "form_data":form
+                }
+                return render(request,'app1/home.html',context)
+
+        else:
+            return redirect("/home/")

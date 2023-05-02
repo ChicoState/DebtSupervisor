@@ -17,12 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from app1 import views as app1_views
 from addTransaction import views as addTransaction_views
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',app1_views.home),
-    path('home/',app1_views.home),
+    path('home/',app1_views.home, name='home'),
+
+    path('updateProfilePic/', app1_views.updateProfilePic, name='updateProfilePic'),
 
     path('addDebt/',app1_views.addDebt, name='addDebt'),
+    path('debt/edit/<int:id>',app1_views.edit),
 
     path('afford/',app1_views.afford),
     path('result/', app1_views.calculate_affordability, name='calculate_affordability'),
@@ -34,4 +39,6 @@ urlpatterns = [
     path('join/', app1_views.join),
     path('login/', app1_views.user_login),
     path('logout/', app1_views.user_logout),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

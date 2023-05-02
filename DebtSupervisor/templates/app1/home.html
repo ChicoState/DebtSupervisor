@@ -54,7 +54,7 @@
         </div>
       </div>
       <br />
-
+      <!---
       <div class="row">
         <div class="col-4">
           <h1>Welcome User!</h1>
@@ -62,7 +62,7 @@
           <canvas id="myChart"></canvas>
           <p>Tip: Keep credit usage to a minimum to increase credit score!</p>
         </div>
-        
+      --> 
         <div class="col-8">
           <h1>My Debts</h1>
           {%for items in table_data%}
@@ -214,7 +214,7 @@
     bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
     bar.text.style.fontSize = '2rem';
 
-    bar.animate({{cru|floatformat:2}});
+    bar.animate(1.0);
   </script>
 
   <script>

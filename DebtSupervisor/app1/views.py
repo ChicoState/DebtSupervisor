@@ -44,7 +44,7 @@ def home (request):
                 "table_data":table_data,
                 "total_balance":total_balance,
                 "debt_category":debt_category,
-                "user_debt":user_debt
+                ##"user_debt":user_debt
             }
     
             return render (request, 'app1/home.html',context)

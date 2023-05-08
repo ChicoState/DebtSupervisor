@@ -15,37 +15,29 @@ from app1.forms import UserProfileForm
 # Create your views here.
 @login_required(login_url='/login/')
 def home (request):
+
     if request.user.is_authenticated:
         if Debtentry.objects.filter(user=request.user).count() > 0:
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
-            ##sorted_data = sorted(table_data, key=lambda x: x.dueDate)
             total_balance = 0
-            
-            ##same_debt = 0
-            ##nth_debt = 0
-            ##prev_value = None
-            ##user_debt = []
-            debt_category = []
+            credit_limit = 0
+
+            #checks if due date is passed 
+            for items in table_data:
+                if items.dueDate < datetime.date.today():
+                    items.dueDate = items.dueDate+relativedelta(months=+1)
+                    items.save()
+                    
             for items in table_data:
                 total_balance = items.currBalance + total_balance
-                debt_category.append(items.type)
-            ##for data in sorted_data:
-                ##current_value = data.type
-                ##if current_value == prev_value:
-                    ##same_debt += data.currBalance
-                    ##user_debt.append(same_debt)
-                ##else:
-                    ##prev_value = current_value
-                    ##same_debt = data.currBalance
-                    ##nth_debt += data.currBalance
-                    ##user_debt.append(nth_debt)
-            debt_category = list(set(debt_category))
-            
+                credit_limit = credit_limit + items.TotalBalance
+        
+
+            cru = (total_balance/credit_limit)
+
             context={
                 "table_data":table_data,
-                "total_balance":total_balance,
-                "debt_category":debt_category,
-                ##"user_debt":user_debt
+                "total_balance":total_balance
             }
     
             return render (request, 'app1/home.html',context)

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    {% include "bootstrap.html" %} 
+    {% include "navigation.html" %}
+    {% load static %}
+    <style>
+      body {
+        background-image: url('{% static "background/home.jpg" %}');
+        background-size: cover;
+      }
+    </style>
+
+    </head>
+    <body>
+      <div class="container my-4">
+      <h1 class="text-center text-white">Welcome to our guide to debt strategies!</h1>
+      <p class="lead text-center text-white">Whether you're dealing with credit cards, student loans, or other debts, it's important to have a plan to manage them and improve your financial health.</p>
+      <p class="text-center text-white">On this page, we've gathered resources to help you explore different debt strategies and find the ones that work best for you. From combining your debts to getting advice from credit counselors, you'll find lots of helpful information.</p>
+      <p class="text-center text-white">We've chosen websites that are reliable and easy to understand. So, click the links below to get started on your journey to financial freedom!</p>
+      </div>  
+      <div class="container" style="Padding:20px;">
+            <div class="row">
+              {% for strategy in strategies %}
+                <div class="col-md-4 ">
+                    <div class="card mb-4 box-shadow d-flex flex-column h-100">
+                        <img class="card-img-top img-fluid" src="{% static 'images/'|add:strategy.name|add:'.jpeg' %}" alt="{{ strategy.name }} Image">
+                        <div class="card-body d-flex flex-column" style="height: 200px;">
+                          <h5 class="card-title">{{ strategy.name }}</h5>
+                          <p class="card-text">{{ strategy.description }}</p>
+                          <div class="mt-auto">
+                          <a href="{{strategy.url}}" target="_blank" class="btn btn-primary btn-block"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                          </svg> Learn More</a>
+                        </div>
+
+
+                        </div>
+                    </div>
+                </div>
+              {% endfor %}
+            </div>
+            
+          </div>
+        
+    </body>
+</html>

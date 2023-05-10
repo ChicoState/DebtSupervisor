@@ -52,3 +52,10 @@ class Debtentry(models.Model):
     def total_interest(self):
         _,total_interest = calculate_payoff(self.currBalance, self.minPayment, self.apr)
         return round(total_interest, 2)
+    
+class debt_Strategies(models.Model):
+    name = models.CharField(max_length=128)
+    description = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    def __str__(self):
+        return self.name

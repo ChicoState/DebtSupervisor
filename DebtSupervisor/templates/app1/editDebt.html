@@ -1,15 +1,22 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Edit Debt</title>     
+        <title>Edit Debt</title>
         {% load static %}
         {% include "bootstrap.html"%}
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+        <style>
+          body {
+            background-image: url('{% static "background/home.jpg" %}');
+            background-size: cover;
+          }
+        </style>
     </head>
     <body>
-        {% include "navigation.html" %} 
-        <div class="container col-md-12">
-        <div class="jumbotron">
-            <h1 class="display-4">{{name}}</h1> 
+        {% include "navigation.html" %}
+        <div class="container edit-container">
+        <div class="jumbotron edit-jumbotron">
+            <h1 class="display-4">{{name}}</h1>
             <hr class="my-4">
             <form method="POST">
                 {% csrf_token %}
@@ -29,16 +36,16 @@
                     <h2>Terms</h2>
 
                     <div class="form-row">
-                          <p>Current balance*</p> 
+                          <p>Current balance*</p>
                         <div class="input-group col-md-6 mb-3">
-                           
+
                         <span class="input-group-text">$</span>
                           {{form_data.currBalance}}
                         </div>
                     </div>
 
                     <div class="form-row">
-                          <p>APR *</p> 
+                          <p>APR *</p>
 
                         <div class="input-group col-md-6 mb-3">
                         {{form_data.apr}}
@@ -47,7 +54,7 @@
                     </div>
 
                     <div class="form-row">
-                          <p>Limit</p> 
+                          <p>Limit</p>
 
                         <div class="input-group col-md-6 mb-3">
                         <span class="input-group-text">$</span>
@@ -56,23 +63,23 @@
                         </div>
                     </div>
 
-                
 
-                   
+
+
                     <hr>
 
                     <h2>Payment Details</h2>
 
                 <div class="form-row">
-                    <p>Minimum payment*</p> 
+                    <p>Minimum payment*</p>
 
                     <div class="form-group col-md-6">
                         {{form_data.minPayment}}
                     </div>
                 </div>
-                
+
                  <div class="form-row">
-                          <p>Next payment due date</p> 
+                          <p>Next payment due date</p>
 
                     <div class="form-group col-md-6">
                         {{form_data.dueDate}}
@@ -84,7 +91,7 @@
                         <td>
                         <div class="form-row">
                         <div class="form-group col-md-6">
-                        <a href="/home/" class="btn btn-secondary">Cancel</a>
+                        <a href="/" class="btn btn-secondary">Cancel</a>
                         </div>
                         <div class="form-group col-md-6">
 
@@ -94,7 +101,7 @@
                         </td>
                         </td>
                     </div>
-                    </tr> 
+                    </tr>
 
                 </table>
             </form>

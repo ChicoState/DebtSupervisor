@@ -5,8 +5,15 @@
     <meta charset="utf-8" />
     <title>Can I Afford It?</title>
     <!--bootstrap includes-->
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
     {% include "bootstrap.html" %} {% load humanize %}
     <!--end bootstrap includes-->
+    <style>
+      body {
+        background-image: url('{% static "background/home.jpg" %}');
+        background-size: cover;
+      }
+    </style>
   </head>
   <body>
     {% include "navigation.html" %}
@@ -15,7 +22,7 @@
         <div class="col-md-12">
           <div class="jumbotron">
             <h1>Can I Afford It?</h1>
-            <p>
+            <p class = "afford-p">
               Enter your monthly disposable income and the cost of the purchase
               to see if you can afford it.
             </p>
@@ -33,8 +40,8 @@
             Sorry, you cannot afford the purchase.
           </div>
           {% endif %}
-          <p>Your monthly disposable income is ${{ disposable_income }}.</p>
-          <p>The cost of the purchase is ${{ cost_of_purchase }}.</p>
+          <p class = "afford-p">Your monthly disposable income is ${{ disposable_income }}.</p>
+          <p class = "afford-p">The cost of the purchase is ${{ cost_of_purchase }}.</p>
 
           {% if high_expenses %}
           <div class="alert alert-warning" role="alert">

@@ -21,8 +21,8 @@ def home (request):
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
             total_balance = 0
             credit_limit = 0
-            
-            #checks if due date is passed 
+
+            #checks if due date is passed
             for items in table_data:
                 if items.dueDate < datetime.date.today():
                     items.dueDate = items.dueDate+relativedelta(months=+1)
@@ -37,7 +37,10 @@ def home (request):
 
             context={
                 "table_data":table_data,
-                "total_balance":total_balance
+                "total_balance":total_balance,
+                # cru isn't fully correct but because it's adding all the possible
+                # debt in there
+                "cru":cru
             }
     
             return render (request, 'app1/home.html',context)

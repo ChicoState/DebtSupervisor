@@ -2,13 +2,21 @@
 <html>
     <head>
         <title>Add Debt</title>
+        {% load static %}
         {%include "bootstrap.html" %}
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+        <style>
+          body {
+            background-image: url('{% static "background/home.jpg" %}');
+            background-size: cover;
+          }
+        </style>
 
     </head>
     <body>
         {%include "navigation.html" %}
-        <div class="container col-md-12">
-         <div class="jumbotron">
+        <div class="container addDebt-container">
+         <div class="jumbotron addDebt-jumbotron">
         <h2 class="display-4">Add Debt</h2>
         <form method="POST">
             {% csrf_token %}

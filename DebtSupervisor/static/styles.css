@@ -1,0 +1,123 @@
+/* Styles for Login Page */
+.login-container {
+  display: flex;
+  justify-content: flex-end; /* Move content to the right side of the container */
+  align-items: center; /* Center content vertically */
+  height: 100%; /* Set height to 100% of the viewport to center vertically */
+}
+
+.login-jumbotron {
+  background-color:rgba(255, 255, 255, 0.5);
+  border-radius: 10;
+  max-width: 405px;
+  margin: 0 auto;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-h1{
+  text-align: center;
+}
+
+/* Styles for Join Page */
+.join-container {
+  display: flex;
+  justify-content: flex-end; /* Move content to the right side of the container */
+  align-items: center; /* Center content vertically */
+  height: 100%; /* Set height to 100% of the viewport to center vertically */
+}
+.join-jumbotron {
+  background-color:rgba(255, 255, 255, 0.5);
+  border-radius: 10;
+  max-width: 500px;
+  margin: 0 auto;
+  height: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Styles for Home Page */
+.home-h1{
+  color: white;
+
+}
+.home-p{
+  color: white;
+}
+
+.calender-h2{
+  color: white;
+}
+.calender-div{
+  color: white;
+}
+
+/* Styles for addDebtform page */
+.addDebt-container {
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin-top: 70px;
+}
+.addDebt-jumbotron {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+  height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Styles for Afford page */
+.afford-h1{
+  color: white;
+}
+.afford-div{
+  color: white;
+}
+.afford-p{
+  color: white;
+}
+
+/* Styles for updateProfilePic page */
+.update-container{
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin-top: 70px;
+}
+.update-jumbotron{
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  max-width: 420px;
+  margin: 0 auto;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Style for editDebt page */
+.edit-container{
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin-top: 70px;
+
+}
+.edit-jumbotron{
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  */
+}

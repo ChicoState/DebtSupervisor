@@ -6,9 +6,16 @@
     <title>Debt Supervisor Project</title>
     <script src="https://cdn.jsdelivr.net/gh/kimmobrunfeldt/progressbar.js/dist/progressbar.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/updateProfilePicture.css">
+    <link rel="stylesheet" type="text/css" href="/static/debtColorTypes.css">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
     <!--bootstrap includes-->
     {% include "bootstrap.html" %} {% load humanize %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        background-image: url('{% static "background/home.jpg" %}');
+        background-size: cover;
+      }
+    </style>
   </head>
   <body>
     {% include "navigation.html" %}
@@ -16,7 +23,7 @@
 
       <div class="row">
               <div class="col-4">
-                <h1 style="text-align:center;">Welcome {{user.username}}!</h1>
+                <h1 class = "home-h1", style="text-align:center;">Welcome {{user.username}}!</h1>
 
                 {% if user.userprofile.profilePic %}
                 <div class="profile-pic">
@@ -37,7 +44,6 @@
                   </a>
                 </div>
                 {% endif %}
-
       {%if table_data%}
         <div class="card">
           <div class="card-body">
@@ -52,40 +58,73 @@
             ></div>
           </div>
         </div>
-      </div>
-      <br />
-      <!---
-      <div class="row">
-        <div class="col-4">
-          <h1>Welcome User!</h1>
-          <img src="{% static 'user.png' %}" class="rounded-circle" alt="..." />
-          <canvas id="myChart"></canvas>
-          <p>Tip: Keep credit usage to a minimum to increase credit score!</p>
+          <p class= "home-p">Tip: Keep credit usage to a minimum to increase credit score!</p>
         </div>
-      --> 
         <div class="col-8">
-          <h1>My Debts</h1>
+          <h1 class = "home-h1">My Debts</h1>
           {%for items in table_data%}
-
           <div class="card mb-3">
+            <div class =
+              {% if items.type == 'Credit Card' %}
+                "credit-card"
+              {% elif items.type == 'Auto Loan'%}
+                "auto-loan"
+              {% elif items.type == 'Personal Loan'%}
+                "personal-loan"
+              {% elif items.type == 'Student Loan'%}
+                "student-loan"
+              {% elif items.type == 'Mortgage'%}
+                "mortgage"
+              {% elif items.type == 'Medical Loan'%}
+                "medical-loan"
+              {% elif items.type == 'Taxes'%}
+                "taxes"
+              {% elif items.type == 'Other' %}
+                "other"
+              {% endif %}>
+
             <div class="card-body">
+
               <div class="d-flex justify-content-between">
+
+                  {% if items.type == 'Credit Card' %}
+                    <img src="{% static 'DebtTypePics/creditCard.jpg' %}" style="max-width: 60px; max-height: 60px;">
+                  {% elif items.type == 'Auto Loan' %}
+                    <img src="{% static 'DebtTypePics/autoLoan.jpg' %}" style="max-width: 60px; max-height: 60px;">
+                  {% elif items.type == 'Personal Loan' %}
+                    <img src="{% static 'DebtTypePics/personalLoan.jpg' %}" style="max-width: 56px; max-height: 56px;">
+                  {% elif items.type == 'Student Loan' %}
+                    <img src="{% static 'DebtTypePics/studentLoan.jpg' %}" style="max-width: 56px; max-height: 56px;">
+                  {% elif items.type == 'Mortgage' %}
+                    <img src="{% static 'DebtTypePics/mortgage.jpg' %}" style="max-width: 56px; max-height: 56px;">
+                  {% elif items.type == 'Medical Loan' %}
+                    <img src="{% static 'DebtTypePics/medicalLoan.jpg' %}" style="max-width: 56px; max-height: 56px;">
+                  {% elif items.type == 'Taxes' %}
+                    <img src="{% static 'DebtTypePics/taxes.jpg' %}" style="max-width: 56px; max-height: 56px;">
+                  {% elif items.type == 'Other' %}
+                    <img src="{% static 'DebtTypePics/other.jpg' %}" style="max-width: 56px; max-height: 56px;">
+                  {% endif %}
+
                 <h5 class="card-title">{{items.name}}</h5>
-                <a href="/debt/edit/{{items.id}}" class="btn btn-light">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-pencil"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"
-                    />
-                  </svg>
-                </a>
+
+                <div>
+                  <a href="/debt/edit/{{items.id}}" class="btn btn-light">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-pencil"
+                      viewBox="0 0 16 16"
+                      >
+                      <path
+                        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"
+                      />
+                    </svg>
+                  </a>
+                </div>
               </div>
+
               <p class="card-text">
                 Current Balance: ${{items.currBalance|floatformat:2|intcomma}}
               </p>
@@ -122,7 +161,7 @@
               </div>
             </div>
           </div>
-
+          </div>
           {%endfor%}
         </div>
       </div>
@@ -130,59 +169,19 @@
       <div>
         <div class="row">
           <div class="col-12">
-            <h2 class="text-center">Due Date Calendar</h2>
-            <div id="calendar"></div>
+            <h2 class="text-center calender-h2">Due Date Calendar</h2>
+            <div class = "calender-div", id="calendar"></div>
           </div>
         </div>
       </div>
     </br>
 
       {%else%}
-      <p>Please use New Debt Form to get started!</p>
+      <p class = "home-p">Please use New Debt Form to get started!</p>
       <button onclick="location.href='{% url 'addDebt' %}'">Add Debt</button>
       {% endif %}
     </div>
-  </body>  
-  <!--
-    <script>
-      var ctx = document.getElementById("myChart");
-      var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: [  {% for item in debt_category %}
-          '{{item}}',
-        {% endfor %}],
-          datasets: [{
-            label: 'Total Balance',
-            data: [{% for item in user_debt %}
-                    {{item}},
-                  {% endfor %}],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.5)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255,99,132,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-         
-          responsive: false,
-      
-        }
-      });
-      
-    </script>
- 
   </body>
-  -->
   <script>
       var bar = new ProgressBar.SemiCircle(container, {
       strokeWidth: 6,
@@ -214,7 +213,7 @@
     bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
     bar.text.style.fontSize = '2rem';
 
-    bar.animate(1.0);
+    bar.animate({{cru|floatformat:2}});
   </script>
 
   <script>
@@ -232,4 +231,5 @@
       });
     });
   </script>
+  </body>
 </html>

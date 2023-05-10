@@ -54,7 +54,7 @@ class JoinForm(forms.ModelForm):
         cleaned_data = super().clean()
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
-
+        
         if not username or not password:
             self.add_error('username', 'Please enter a valid username and password.')
     '''

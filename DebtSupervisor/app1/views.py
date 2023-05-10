@@ -21,7 +21,7 @@ def home (request):
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
             total_balance = 0
             credit_limit = 0
-
+            
             #checks if due date is passed 
             for items in table_data:
                 if items.dueDate < datetime.date.today():

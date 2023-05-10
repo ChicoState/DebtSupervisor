@@ -45,7 +45,31 @@ class JoinForm(forms.ModelForm):
     class Meta():
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password')
-        help_texts = {
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].help_text = None
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+
+        if not username or not password:
+            self.add_error('username', 'Please enter a valid username and password.')
+    '''
+    def is_valid(self):
+        valid = super().is_valid()
+        if not valid:
+            return False
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        if not username or not password:
+            self.add_error('username', 'Please enter a valid username and password.')
+            return False
+        return True
+    '''
+    help_texts = {
         'username': None
     }
 

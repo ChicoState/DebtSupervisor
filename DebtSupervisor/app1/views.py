@@ -116,7 +116,8 @@ def join(request):
         else:
             # Form invalid, print errors to console
             page_data = { "join_form": join_form }
-            return render(login_url='/login/')(request, 'app1/join.html', page_data)
+            '''return render(login_url='/login/')(request, 'app1/join.html', page_data)'''
+            return render(request, 'app1/join.html', page_data)
     else:
         join_form = JoinForm()
         ##join_form.fields["username"].help_text = ""

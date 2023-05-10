@@ -44,10 +44,6 @@
                   </a>
                 </div>
                 {% endif %}
-
-
-
-
       {%if table_data%}
         <div class="card">
           <div class="card-body">
@@ -68,7 +64,6 @@
           <h1 class = "home-h1">My Debts</h1>
           {%for items in table_data%}
           <div class="card mb-3">
-
             <div class =
               {% if items.type == 'Credit Card' %}
                 "credit-card"
@@ -187,7 +182,6 @@
       {% endif %}
     </div>
   </body>
-
   <script>
       var bar = new ProgressBar.SemiCircle(container, {
       strokeWidth: 6,

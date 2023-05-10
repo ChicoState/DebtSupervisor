@@ -22,7 +22,7 @@ def home (request):
             total_balance = 0
             credit_limit = 0
 
-            #checks if due date is passed 
+            #checks if due date is passed
             for items in table_data:
                 if items.dueDate < datetime.date.today():
                     items.dueDate = items.dueDate+relativedelta(months=+1)
@@ -37,7 +37,10 @@ def home (request):
 
             context={
                 "table_data":table_data,
-                "total_balance":total_balance
+                "total_balance":total_balance,
+                # cru isn't fully correct but because it's adding all the possible
+                # debt in there
+                "cru":cru
             }
     
             return render (request, 'app1/home.html',context)
@@ -113,7 +116,8 @@ def join(request):
         else:
             # Form invalid, print errors to console
             page_data = { "join_form": join_form }
-            return render(login_url='/login/')(request, 'app1/join.html', page_data)
+            '''return render(login_url='/login/')(request, 'app1/join.html', page_data)'''
+            return render(request, 'app1/join.html', page_data)
     else:
         join_form = JoinForm()
         ##join_form.fields["username"].help_text = ""

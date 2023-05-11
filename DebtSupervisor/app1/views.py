@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from app1.forms import JoinForm, LoginForm,debtForm
-from app1.models import Debtentry
+from app1.models import Debtentry,debt_Strategies
 from django.contrib.auth.models import User
 from math import ceil
 import datetime
@@ -236,3 +236,24 @@ def edit(request,id):
 
         else:
             return redirect("/home/")
+
+
+
+
+def debtStrageties(request):
+    if debt_Strategies.objects.count() <= 0:
+        snowflake = debt_Strategies.objects.create(name="Snowball Method", description="Pay off the smallest debt first, then use the money you would have used to pay off the smallest debt to pay off the next smallest debt, and so on.", url="https://www.debt.org/advice/debt-snowball-method-how-it-works/")
+        avalanche = debt_Strategies.objects.create(name="Avalanche Method", description="Prioritize and pay off high-interest debt first, then use the freed-up funds to pay off other debts in descending order of interest rates.", url="https://www.debt.org/advice/debt-avalanche/")
+        consolidation = debt_Strategies.objects.create(name="Debt Consolidation", description="Learn more ways to pay off debts", url="https://www.debt.org/consolidation/")
+
+        snowflake.save()
+        avalanche.save()
+        consolidation.save()
+
+    
+    context = {
+        "strategies": debt_Strategies.objects.all()
+    }
+
+    return render(request, 'app1/debtStrageties.html', context)
+

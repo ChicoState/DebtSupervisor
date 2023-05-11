@@ -235,10 +235,11 @@ def edit(request,id):
                 return render(request,'app1/home.html',context)
 
         else:
-<<<<<<< HEAD
             return redirect("/home/")
-=======
-        
+
+
+
+
 def debtStrageties(request):
     if debt_Strategies.objects.count() <= 0:
         snowflake = debt_Strategies.objects.create(name="Snowball Method", description="Pay off the smallest debt first, then use the money you would have used to pay off the smallest debt to pay off the next smallest debt, and so on.", url="https://www.debt.org/advice/debt-snowball-method-how-it-works/")
@@ -255,4 +256,4 @@ def debtStrageties(request):
     }
 
     return render(request, 'app1/debtStrageties.html', context)
->>>>>>> stratPage
+

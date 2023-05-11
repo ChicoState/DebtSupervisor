@@ -1,4 +1,5 @@
 import math
+from django.core.exceptions import ValidationError
 
 def calculate_payoff(currbalance, minpayment, apr):
     total_interest = 0
@@ -24,3 +25,13 @@ def calculate_payoff(currbalance, minpayment, apr):
         n = math.ceil(currbalance / minpayment)           
     
     return n, total_interest
+
+def validateBalances(balance):
+    if balance < 0 :
+        raise ValidationError("Balance cannot be negative")
+    
+def validateAPR(apr):
+    if apr < 0.0 or apr > 100.0:
+        raise ValidationError("APR must be between 0 and 100")
+
+    

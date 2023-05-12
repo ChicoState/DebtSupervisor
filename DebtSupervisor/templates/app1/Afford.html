@@ -38,18 +38,22 @@
         <div class="form-group afford-div">
         <label for="monthly_income">Monthly Income:</label>
         <input type="number" name="monthly_income" class="form-control" required />
+          {{ form.monthly_income.errors }}
         </div>
         <div class="form-group afford-div">
         <label for="monthly_expenses">Monthly Expenses:</label>
         <input type="number" name="monthly_expenses" class="form-control" required />
+          {{ form.monthly_expenses.errors }}
         </div>
         <div class="form-group afford-div">
         <label for="monthly_savings">Monthly Savings:</label>
         <input type="number" name="monthly_savings" class="form-control" required />
+          {{ form.monthly_savings.errors }}
         </div>
         <div class="form-group afford-div">
         <label for="cost_of_purchase">Cost of Purchase:</label>
         <input type="number" name="cost_of_purchase" class="form-control" required />
+          {{ form.cost_of_purchase.errors }}
         </div>
 
         <button type="submit" class="btn btn-primary">Calculate</button>

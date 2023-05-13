@@ -4,7 +4,7 @@ from django.forms import CharField, ModelForm, Textarea
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from app1.models import Debtentry
-from app1.utils import calculate_payoff
+from app1.utils import calculate_payoff,validateBalances,validateAPR
 from app1.models import UserProfile
 
 class UserProfileForm(forms.ModelForm):
@@ -79,10 +79,10 @@ class LoginForm(forms.Form):
 
 class debtForm(forms.ModelForm):
     name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':"Nickname"}))
-    currBalance = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Current Balance"}))
-    TotalBalance = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Total Balance"}))
+    currBalance = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Current Balance"}),validators=[validateBalances])
+    TotalBalance = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Total Balance"}),validators=[validateBalances])
     minPayment = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Minimum Payment"}))
-    apr = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Annual Percentage Rate"}))
+    apr = forms.FloatField(widget=forms.NumberInput(attrs={'placeholder':"Annual Percentage Rate"}),validators=[validateAPR])
     dueDate = forms.DateField(widget=forms.DateInput(attrs={'type':'date'}))
 
     class Meta():
@@ -91,3 +91,21 @@ class debtForm(forms.ModelForm):
         widget = {
             'type' : forms.Select(choices=Debtentry.DEBT_TYPES),
         }
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        currBalance = cleaned_data.get('currBalance')
+        TotalBalance = cleaned_data.get('TotalBalance')
+        apr = cleaned_data.get('apr')
+        minPayment = cleaned_data.get('minPayment')
+        if currBalance is not None and TotalBalance is not None and currBalance > TotalBalance:
+            self.add_error('currBalance', 'Current balance cannot be greater than total balance.')
+            self.add_error('TotalBalance', 'Total balance cannot be less than current balance.')
+
+        if apr is not None and minPayment is not None and currBalance is not None:
+            interest_rate = (apr / 100) 
+            year_paid = minPayment * 12
+            year_interest_paid = currBalance * interest_rate
+            if year_paid < year_interest_paid:
+                self.add_error('minPayment', 'Minimum payment must be greater than accumulated interest.')
+       

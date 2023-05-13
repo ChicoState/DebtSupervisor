@@ -50,7 +50,7 @@
             <h5 class="card-title">Credit Usage:</h5>
             <p class="card-text">
               {{total_balance|floatformat:2|intcomma}} /
-              {{credit_limit|floatformat:2|intcomma}} USD
+              {{card_balance|floatformat:2|intcomma}} USD
             </p>
             <div
               id="container"
@@ -213,7 +213,7 @@
     bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
     bar.text.style.fontSize = '2rem';
 
-    bar.animate({{cru|floatformat:2}});
+    bar.animate({{cru|floatformat:3}});
   </script>
 
   <script>

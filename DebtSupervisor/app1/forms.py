@@ -109,3 +109,58 @@ class debtForm(forms.ModelForm):
             if year_paid < year_interest_paid:
                 self.add_error('minPayment', 'Minimum payment must be greater than accumulated interest.')
        
+    #affordability validators
+class Affordability(forms.Form):
+    monthly_income = forms.FloatField(required=True, min_value=0)
+    monthly_expenses = forms.FloatField(required=True, min_value=0)
+    monthly_savings = forms.FloatField(required=True, min_value=0)
+    cost_of_purchase = forms.FloatField(required=True, min_value=0)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        monthly_income = cleaned_data.get("monthly_income")
+        monthly_expenses = cleaned_data.get("monthly_expenses")
+        monthly_savings = cleaned_data.get("monthly_savings")
+        cost_of_purchase = cleaned_data.get("cost_of_purchase")
+        
+        if cost_of_purchase is not None:
+            if cost_of_purchase < 0:
+                self.add_error(
+                    "cost_of_purchase", "Cost of purchase cannot be negative."
+                )
+        else:
+            self.add_error(
+                "cost_of_purchase", "Cost of purchase cannot be empty or negative."
+            )
+        
+        if monthly_income is not None and monthly_expenses is not None and monthly_savings is not None:
+                if monthly_savings > monthly_income:
+                    self.add_error(
+                        "monthly_savings", "Monthly savings cannot be greater than monthly income."
+                    )
+                if monthly_expenses > monthly_income:
+                    self.add_error(
+                        "monthly_expenses", "Monthly expenses cannot be greater than monthly income."
+                    )
+                if monthly_savings > (monthly_income - monthly_expenses):
+                    self.add_error(
+                        "monthly_savings", "Monthly savings cannot be greater than the difference between monthly income and monthly expenses."
+                    )
+                if monthly_income < (monthly_expenses + monthly_savings):
+                    self.add_error(
+                        "monthly_income", "Monthly income must be greater than the sum of monthly expenses and monthly savings."
+                    )
+                if monthly_income < 0 :
+                    self.add_error(
+                        "monthly_income", "Monthly income cannot be negative."
+                    )
+                if monthly_expenses < 0 :
+                    self.add_error(
+                        "monthly_expenses", "Monthly expenses cannot be negative."
+                    )
+                if monthly_savings < 0 :
+                    self.add_error(
+                        "monthly_savings", "Monthly savings cannot be negative."
+                    )
+
+                    

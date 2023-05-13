@@ -22,7 +22,53 @@ def home (request):
             card_balance = 0
             total_balance = 0
             credit_limit = 0
+            # variables needed for the donut
+            credit_card = 0
+            auto_loan = 0
+            personal_loan = 0
+            student_loan = 0
+            morgage_loan = 0
+            medical_loan = 0
+            taxes = 0
+            other = 0
+            debt_category = []
+            label_category = []
 
+            for items in table_data:
+                if items.type == Debtentry.CREDIT_CARD:
+                    credit_card += items.currBalance
+                    debt_category.append(credit_card)
+                    label_category.append("Credit Card")
+                elif items.type == Debtentry.AUTO_LOAN:
+                    auto_loan += items.currBalance
+                    debt_category.append(auto_loan)
+                    label_category.append("Auto Loan")
+                elif items.type == Debtentry.PERSONAL_LOAN:
+                    personal_loan += items.currBalance
+                    debt_category.append(personal_loan)
+                    label_category.append("Personal Loan")
+                elif items.type == Debtentry.STUDENT_LOAN:
+                    student_loan += items.currBalance
+                    debt_category.append(student_loan)
+                    label_category.append("Student Loan")
+                elif items.type == Debtentry.MORTGAGE:
+                    morgage_loan += items.currBalance
+                    debt_category.append(morgage_loan)
+                    label_category.append("Morgage")
+                elif items.type == Debtentry.MEDICAL_LOAN:
+                    medical_loan += items.currBalance
+                    debt_category.append(medical_loan)
+                    label_category.append("Medical Loan")
+                elif items.type == Debtentry.TAXES:
+                    taxes += Debtentry.currBalance
+                    debt_category.append(taxes)
+                    label_category.append("Taxes")
+                elif items.type == Debtentry.OTHER:
+                    other += Debtentry.currBalance
+                    debt_category.append(other)
+                    label_category.append("Other")
+
+            
             #checks if due date is passed
             for items in table_data:
                 if items.dueDate < datetime.date.today():
@@ -39,7 +85,9 @@ def home (request):
             context={
                 "table_data":table_data,
                 "total_balance":total_balance,
-                "cru":cru
+                "cru":cru,
+                "label_category":label_category,
+                "debt_category":debt_category
             }
     
             return render (request, 'app1/home.html',context)

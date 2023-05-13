@@ -4,6 +4,7 @@
     {% load static %}
     <meta charset="utf-8" />
     <title>Debt Supervisor Project</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/kimmobrunfeldt/progressbar.js/dist/progressbar.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/updateProfilePicture.css">
     <link rel="stylesheet" type="text/css" href="/static/debtColorTypes.css">
@@ -58,6 +59,7 @@
             ></div>
           </div>
         </div>
+        <canvas id="DonutChart"></canvas>
           <p class= "home-p">Tip: Keep credit usage to a minimum to increase credit score!</p>
         </div>
         <div class="col-8">
@@ -214,6 +216,51 @@
     bar.text.style.fontSize = '2rem';
 
     bar.animate({{cru|floatformat:3}});
+  </script>
+  <script>
+    function generateRGBAColors(numColors) {
+      var colors = [];
+      var step = Math.floor(256 / numColors);
+      for (var i = 0; i < numColors; i++) {
+        var r = i * step;
+        var g = (i + numColors/3) * step;
+        var b = (i + (2*numColors)/3) * step;
+        var rgbaColor = 'rgba(' + r + ', ' + g + ', ' + b + ', 1)';
+        colors.push(rgbaColor);
+      }
+      return colors;
+    }
+
+    var numColors = 8;
+    var rgbaColors = generateRGBAColors(numColors);
+
+    const ctx = document.getElementById("DonutChart");
+    var myChart = new Chart(ctx, {
+      type:'doughnut',
+      data: {
+        labels: 
+        [
+          {% for items in label_category%}
+            '{{items}}',
+          {% endfor %}
+        ],
+        datasets: [{
+          label: 'Debt Percentage of User',
+          data:
+            [
+            {% for items in debt_category %}
+              {{items}},
+            {% endfor %}
+            ],
+          backgroundColor: rgbaColors,
+          borderColor: rgbaColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: false,
+      },
+    });
   </script>
 
   <script>

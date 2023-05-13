@@ -11,6 +11,7 @@ import datetime
 from dateutil.relativedelta import *
 from app1.models import UserProfile
 from app1.forms import UserProfileForm
+from app1.forms import Affordability
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -161,54 +162,67 @@ def user_logout(request):
 def result(request):
     return render (request, 'app1/result.html')
 
+def my_view(request):
+    if request.method == 'POST':
+        form = Affordability(request.POST)
+        if form.is_valid():
+            pass  # does nothing, just trigger the validation
+    else:
+        form = Affordability()
+    return render(request, 'app1/Afford.html', {'form': form})
+
 def calculate_affordability(request):
     if request.method == 'POST':
-        # Get the form data from the request
-        monthly_income = float(request.POST.get('monthly_income'))
-        monthly_expenses = float(request.POST.get('monthly_expenses'))
-        cost_of_purchase = float(request.POST.get('cost_of_purchase'))
-        monthly_savings = float(request.POST.get('monthly_savings'))
+        form = Affordability(request.POST)
+        if form.is_valid():
+            # Get the form data from the request
+            monthly_income = float(request.POST.get('monthly_income'))
+            monthly_expenses = float(request.POST.get('monthly_expenses'))
+            cost_of_purchase = float(request.POST.get('cost_of_purchase'))
+            monthly_savings = float(request.POST.get('monthly_savings'))
 
-        # Calculate affordability
-        affordability = monthly_income - monthly_expenses - cost_of_purchase - monthly_savings
+            # Calculate affordability
+            affordability = monthly_income - monthly_expenses - cost_of_purchase - monthly_savings
 
-        # Calculate dispoable_income
-        disposable_income = monthly_income -  monthly_expenses - monthly_savings
+            # Calculate dispoable_income
+            disposable_income = monthly_income -  monthly_expenses - monthly_savings
 
-        # (NEW!) calculate the expenses percentage and savings percentage
-        expenses_percentage = monthly_expenses / monthly_income * 100
-        savings_percentage = monthly_savings / monthly_income * 100
+            # (NEW!) calculate the expenses percentage and savings percentage
+            expenses_percentage = monthly_expenses / monthly_income * 100
+            savings_percentage = monthly_savings / monthly_income * 100
 
-        #Check conditions if they can afford something
-        high_expenses = expenses_percentage > 50
-        low_savings = savings_percentage < 20
-        cost_too_high = cost_of_purchase > 0.3 * monthly_income
+            #Check conditions if they can afford something
+            high_expenses = expenses_percentage > 50
+            low_savings = savings_percentage < 20
+            cost_too_high = cost_of_purchase > 0.3 * monthly_income
 
-        #Caluclate the savings on needs to pay the cost of purchase within 6 months
-        saving_per_month = cost_of_purchase / 6
-        savings_per_month = cost_of_purchase / 12
+            #Caluclate the savings on needs to pay the cost of purchase within 6 months
+            saving_per_month = cost_of_purchase / 6
+            savings_per_month = cost_of_purchase / 12
 
 
-        # Create a dictionary of data to pass to the template
-        context = {
-            'monthly_income': monthly_income,
-            'monthly_expenses': monthly_expenses,
-            'monthly_savings': monthly_savings,
-            'cost_of_purchase': cost_of_purchase,
-            'affordability': affordability,
-            'disposable_income': disposable_income,
-            'can_afford': affordability >= 0,
-            'expenses_percentage': expenses_percentage,
-            'savings_percentage': savings_percentage,
-            'high_expenses': high_expenses,
-            'low_savings': low_savings,
-            'cost_too_high': cost_too_high,
-            'saving_per_month': saving_per_month,
-            'savings_per_month': savings_per_month,
-        }
+            # Create a dictionary of data to pass to the template
+            context = {
+                'monthly_income': monthly_income,
+                'monthly_expenses': monthly_expenses,
+                'monthly_savings': monthly_savings,
+                'cost_of_purchase': cost_of_purchase,
+                'affordability': affordability,
+                'disposable_income': disposable_income,
+                'can_afford': affordability >= 0,
+                'expenses_percentage': expenses_percentage,
+                'savings_percentage': savings_percentage,
+                'high_expenses': high_expenses,
+                'low_savings': low_savings,
+                'cost_too_high': cost_too_high,
+                'saving_per_month': saving_per_month,
+                'savings_per_month': savings_per_month,
+            }
 
-        # Render the template with the data
-        return render(request, 'app1/result.html', context)
+            # Render the template with the data
+            return render(request, 'app1/result.html', context)
+        else:
+            return render(request, 'app1/afford.html', {'form': form})
 
 @login_required(login_url ='/login/')
 def edit(request,id):

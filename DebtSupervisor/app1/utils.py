@@ -5,9 +5,16 @@ def calculate_payoff(currbalance, minpayment, apr):
     total_interest = 0
     n = 0
     
+    if minpayment == 0:
+        return float('inf'), 0
+    
     if apr != 0:
         #calculate number of months to pay off
          apr = apr / 100
+         
+         if minpayment <= 0 or (apr/12) * currbalance / minpayment >= 1:
+             return 9999, 0
+         
          n = -(math.log(1 - (apr/12) * currbalance / minpayment)) / (math.log(1 + apr/12))
          n = math.ceil(n) # round up to nearest month
          
@@ -34,4 +41,6 @@ def validateAPR(apr):
     if apr < 0.0 or apr > 100.0:
         raise ValidationError("APR must be between 0 and 100")
 
-    
+def validateMinPayment(minPayment):
+    if minPayment <= 0:
+        raise ValidationError("Minimum payment must be greater than 0")

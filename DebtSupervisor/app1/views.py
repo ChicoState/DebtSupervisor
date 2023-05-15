@@ -3,6 +3,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from app1.forms import JoinForm, LoginForm,debtForm
 from app1.models import Debtentry,debt_Strategies
 from django.contrib.auth.models import User
@@ -20,6 +21,7 @@ def home (request):
     if request.user.is_authenticated:
         if Debtentry.objects.filter(user=request.user).count() > 0:
             table_data = Debtentry.objects.filter(user=request.user).order_by('-dueDate')
+            debt_summary = Debtentry.objects.filter(user=request.user).values('type').annotate(total_curr_balance=Sum('currBalance'))
             card_balance = 0
             total_balance = 0
             credit_limit = 0
@@ -34,6 +36,7 @@ def home (request):
             other = 0
             debt_category = []
             label_category = []
+            data = list(debt_summary)
 
             for items in table_data:
                 if items.type == Debtentry.CREDIT_CARD:
@@ -86,9 +89,12 @@ def home (request):
             context={
                 "table_data":table_data,
                 "total_balance":total_balance,
+                "credit_limit": credit_limit,
+                "card_balance":card_balance,
                 "cru":cru,
                 "label_category":label_category,
-                "debt_category":debt_category
+                "debt_category":debt_category,
+                "data":data
             }
     
             return render (request, 'app1/home.html',context)

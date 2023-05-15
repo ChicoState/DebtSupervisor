@@ -249,7 +249,7 @@
           data:
             [
             {% for items in debt_category %}
-              {{items}},
+              {{items.total_curr_balance}},
             {% endfor %}
             ],
           backgroundColor: rgbaColors,

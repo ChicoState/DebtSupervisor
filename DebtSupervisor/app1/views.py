@@ -72,7 +72,7 @@ def home (request):
                     debt_category.append(other)
                     label_category.append("Other")
 
-            
+
             #checks if due date is passed
             for items in table_data:
                 if items.dueDate < datetime.date.today():

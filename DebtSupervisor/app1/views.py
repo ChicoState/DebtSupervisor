@@ -318,3 +318,4 @@ def debtStrageties(request):
 
     return render(request, 'app1/debtStrageties.html', context)
 
+

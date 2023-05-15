@@ -1,6 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase,Client
 from django.contrib.auth.models import User
-from app1.models import Debtentry
+from datetime import date
+from dateutil.relativedelta import relativedelta
+from app1.models import Debtentry,debt_Strategies
 from django.urls import reverse
 from .forms import debtForm
 from .forms import Affordability
@@ -286,3 +288,69 @@ class CalculateAffordabilityTest(TestCase):
         response = self.client.post(url, post_data)
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'monthly_savings', 'Monthly savings cannot be greater than the difference between monthly income and monthly expenses.')
+
+class HomepageTestCase(TestCase):
+    def setUp(self):
+        # Create a user and some debt entries
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        Debtentry.objects.create(user=self.user, type=Debtentry.CREDIT_CARD, currBalance=100, TotalBalance=1000, dueDate=date.today(),apr= 5,minPayment = 35)
+        Debtentry.objects.create(user=self.user, type=Debtentry.AUTO_LOAN, currBalance=500, TotalBalance = 2000,dueDate=date.today()+relativedelta(months=+1),apr = 8,minPayment = 55)
+
+    def test_with_debt_entries(self):
+        client = Client()
+        client.force_login(self.user)
+        response = client.get('/home/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Credit Card")
+        self.assertContains(response, "Auto Loan")
+    
+    def test_without_debt_entries(self):
+        client = Client()
+        client.force_login(self.user)
+        Debtentry.objects.filter(user=self.user).delete()
+        response = client.get('/home/')
+        self.assertEqual(response.status_code,200)
+        self.assertNotContains(response,"Credit Card")
+        self.assertNotContains(response,"Auto Loan")
+
+class DebtStratpageTestCase(TestCase):
+    def setUp(self):
+        self.snowflake = debt_Strategies.objects.create(name="Snowball Method", description="Pay off the smallest debt first, then use the money you would have used to pay off the smallest debt to pay off the next smallest debt, and so on.", url="https://www.debt.org/advice/debt-snowball-method-how-it-works/")
+        self.avalanche = debt_Strategies.objects.create(name="Avalanche Method", description="Prioritize and pay off high-interest debt first, then use the freed-up funds to pay off other debts in descending order of interest rates.", url="https://www.debt.org/advice/debt-avalanche/")
+        self.consolidation = debt_Strategies.objects.create(name="Debt Consolidation", description="Learn more ways to pay off debts", url="https://www.debt.org/consolidation/")
+    
+    def test_debt_strat_page(self):
+        response = self.client.get('/debtstrategies/')
+        self.assertEqual(response.status_code,200)
+        self.assertContains(response, self.snowflake.name)
+        self.assertContains(response, self.snowflake.description)
+        self.assertContains(response, self.snowflake.url)
+        self.assertContains(response, self.avalanche.name)
+        self.assertContains(response, self.avalanche.description)
+        self.assertContains(response, self.avalanche.url)
+        self.assertContains(response, self.consolidation.name)
+        self.assertContains(response, self.consolidation.description)
+        self.assertContains(response, self.consolidation.url)
+
+
+class AddDebtpageTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.debt_data = {
+            "type": Debtentry.CREDIT_CARD,
+            "name": "Test Card",
+            "currBalance": 1000,
+            "TotalBalance": 2000,
+            "apr": 12.00,
+            "minPayment": 25.00,
+            "dueDate": date.today(),
+        }
+
+    def test_form_page(self):
+        self.client.login(username = 'testuser',password = 'testpass')
+        response = self.client.post(('/addDebt/'),self.debt_data)
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(Debtentry.objects.count(), 1)
+
+
+

@@ -240,16 +240,16 @@
       data: {
         labels: 
         [
-          {% for items in label_category%}
-            '{{items}}',
+          {% for items in data%}
+            '{{items.type}}',
           {% endfor %}
         ],
         datasets: [{
-          label: 'Debt Percentage of User',
+          label: 'Debt of User in USD',
           data:
             [
-            {% for items in debt_category %}
-              {{items}},
+            {% for items in data %}
+              {{items.total_curr_balance}},
             {% endfor %}
             ],
           backgroundColor: rgbaColors,

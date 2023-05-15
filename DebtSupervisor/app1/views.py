@@ -75,17 +75,18 @@ def home (request):
                 if items.dueDate < datetime.date.today():
                     items.dueDate = items.dueDate+relativedelta(months=+1)
                     items.save()
-                    
+                 
             for items in table_data:
                 if items.type == Debtentry.CREDIT_CARD:
                     credit_limit += items.TotalBalance
                     card_balance += items.currBalance  
-                total_balance += items.currBalance + total_balance
-            cru = (card_balance/credit_limit)
+            cru = card_balance/credit_limit
             
             context={
                 "table_data":table_data,
                 "total_balance":total_balance,
+                "credit_limit": credit_limit,
+                "card_balance":card_balance,
                 "cru":cru,
                 "label_category":label_category,
                 "debt_category":debt_category
